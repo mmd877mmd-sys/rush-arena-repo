@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">rush-arena</string>
+    <string name="title_activity_main">rush-arena</string>
+    <string name="package_name">com.rusharena.app</string>
+    <string name="custom_url_scheme">com.rusharena.app</string>
+</resources>

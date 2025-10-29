@@ -1,0 +1,6 @@
+{
+  "appId": "com.rushAren.app",
+  "appName": "rush-arena",
+  "webDir": "out",
+  "bundledWebRuntime": false
+}
