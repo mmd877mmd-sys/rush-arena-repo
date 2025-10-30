@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Gamepad2, ClipboardList, BarChart2, User } from "lucide-react";
+import { Gamepad2, ClipboardList, Contact, User } from "lucide-react";
 
 export default function FooterNav() {
   const pathname = usePathname();
@@ -10,7 +10,7 @@ export default function FooterNav() {
   const tabs = [
     { name: "Play", icon: Gamepad2, href: "/" },
     { name: "My Matches", icon: ClipboardList, href: "/my-matches" },
-    { name: "Results", icon: BarChart2, href: "/results" },
+    { name: "Contacts", icon: Contact, href: "/contacts" },
     { name: "Profile", icon: User, href: "/profile" },
   ];
 

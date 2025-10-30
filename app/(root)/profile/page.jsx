@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,12 +6,14 @@ import {
   User,
   Wallet,
   Award,
+  CreditCard,
   ClipboardList,
   Share2,
   LogOut,
 } from "lucide-react";
 import Navbar from "@/app/component/application/menubar";
 import FooterNav from "@/app/component/application/footer";
+import { depositPage, transection, withdrawPage } from "@/config";
 
 export default function ProfileSidebar() {
   return (
@@ -45,33 +46,39 @@ export default function ProfileSidebar() {
 
           <div className="divide-y divide-white/6">
             <MenuItem
-              href="/wallet"
+              href="wallet"
               icon={<Wallet size={20} />}
               label="Wallet"
             />
             <MenuItem
-              href="/withdraw"
+              href={depositPage}
+              icon={<CreditCard size={20} />}
+              label="Diposit"
+            />
+            <MenuItem
+              href={withdrawPage}
               icon={<Award size={20} />}
               label="Withdraw"
             />
+            <MenuItem
+              href={transection}
+              icon={<CreditCard size={20} />}
+              label="Transection history"
+            />
 
             <MenuItem
-              href="/my-profile"
+              href="profile/my-profile"
               icon={<User size={20} />}
               label="My Profile"
             />
             <MenuItem
-              href="/rules"
+              href="profile/rules"
               icon={<ClipboardList size={20} />}
               label="All Rules"
             />
+
             <MenuItem
-              href="/top-players"
-              icon={<Award size={20} />}
-              label="Top Players"
-            />
-            <MenuItem
-              href="/share"
+              href="profile/share"
               icon={<Share2 size={20} />}
               label="Share This App"
             />

@@ -5,52 +5,93 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import axios from "axios";
-import { showToast } from "@/app/component/application/tostify";
 import Countdown from "@/app/component/countdown";
-import FooterNav from "@/app/component/application/footer";
+
 import { useSearchParams } from "next/navigation";
 
 const MatchCards = () => {
-  const [matches, setMatches] = useState([]);
+  // const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const searchParams = useSearchParams();
-  const matchType = searchParams.get("type");
 
-  useEffect(() => {
-    const fetchMatches = async () => {
-      setLoading(true);
-      setError(null);
+  const matches = [
+    {
+      entryFee: 20,
+      entryType: "Solo",
+      joined: 0,
+      map: "Bermuda",
+      matchType: "BR Match",
+      perKill: 10,
+      startTime: "2025-10-22T06:14:00.000Z",
+      title: "Solo Time | Mobile | Regular",
+      totalSpots: 48,
+      winPrize: 198,
+      __v: 0,
+      _id: "68e61a17d305e332f6ef1b",
+    },
+    {
+      entryFee: 20,
+      entryType: "Solo",
+      joined: 0,
+      map: "Bermuda",
+      matchType: "BR Match",
+      perKill: 10,
+      startTime: "2025-10-22T06:14:00.000Z",
+      title: "Solo Time | Mobile | Regular",
+      totalSpots: 48,
+      winPrize: 198,
+      __v: 0,
+      _id: "68f8e61a17d305e332ef1b",
+    },
+    {
+      entryFee: 20,
+      entryType: "Solo",
+      joined: 0,
+      map: "Bermuda",
+      matchType: "BR Match",
+      perKill: 10,
+      startTime: "2025-10-22T06:14:00.000Z",
+      title: "Solo Time | Mobile | Regular",
+      totalSpots: 48,
+      winPrize: 198,
+      __v: 0,
+      _id: "68f8e61a1305e332f6ef1b",
+    },
+  ];
+  // useEffect(() => {
+  //   const fetchMatches = async () => {
+  //     setLoading(true);
+  //     setError(null);
 
-      try {
-        const response = await axios.get(`/api/matches?type=${matchType}`);
-        setMatches(response.data.data || []);
-        console.log(response.data.data);
-      } catch (err) {
-        // Axios error handling
-        if (err.response) {
-          if (err.response.status === 404) {
-            showToast("info", "No matches found");
-            setMatches([]);
-          } else {
-            showToast("error", err.response.data?.message || "Server error");
-          }
-        } else if (err.request) {
-          showToast("error", "No response from server. Please try again.");
-        } else {
-          showToast("error", "Error: " + err.message);
-        }
+  //     try {
+  //       const response = await axios.get(`/api/matches?type=${matchType}`);
+  //       setMatches(response.data.data || []);
+  //       console.log(response.data.data);
+  //     } catch (err) {
+  //       // Axios error handling
+  //       if (err.response) {
+  //         if (err.response.status === 404) {
+  //           showToast("info", "No matches found");
+  //           setMatches([]);
+  //         } else {
+  //           showToast("error", err.response.data?.message || "Server error");
+  //         }
+  //       } else if (err.request) {
+  //         showToast("error", "No response from server. Please try again.");
+  //       } else {
+  //         showToast("error", "Error: " + err.message);
+  //       }
 
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    if (matchType) {
-      fetchMatches();
-    }
-  }, [matchType]);
+  //   if (matchType) {
+  //     fetchMatches();
+  //   }
+  // }, [matchType]);
 
   if (loading) return <p>Loading matches...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
@@ -68,14 +109,17 @@ const MatchCards = () => {
       hour12: true,
     });
   }
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type"); // "BR Match"
 
   return (
     <>
       <div className="space-y-4 bg-gray-400 min-h-screen my-16 p-4 sm:flex gap-2">
+        <h1 className="text-center text-2xl font-bold  mb-6">{type}</h1>
         {matches.map((match, idx) => (
           <Card
             key={idx}
-            className="bg-gray-800 text-white border border-gray-700 h-fit sm:w-full"
+            className="bg-gray-800 text-white border h-1/3 border-gray-700 sm:w-full"
           >
             <CardHeader>
               <div className="flex gap-4 justify-start">
@@ -99,19 +143,19 @@ const MatchCards = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-around ">
-                <div className="text-green-500 font-bold flex flex-col items-center justify-center">
+                <div className="text-green-500 whitespace-nowrap font-bold flex flex-col items-center justify-center">
                   <strong> + WIN PRIZE</strong> <span>{match.winPrize} TK</span>
                 </div>
-                <div className="text-blue-500 font-bold flex flex-col items-center justify-center">
+                <div className="text-blue-500 whitespace-nowrap font-bold flex flex-col items-center justify-center">
                   <strong> + PER KILL</strong> <span>{match.perKill} TK</span>
                 </div>
-                <div className="text-red-500 font-bold flex flex-col items-center justify-center">
-                  <strong> + ENTRY FEE</strong> <span>{match.entryFee} TK</span>
+                <div className="text-red-500 font-bold flex flex-col items-center whitespace-nowrap justify-center">
+                  <strong> ENTRY FEE</strong> <span>{match.entryFee} TK</span>
                 </div>
               </div>
 
               <div className="flex justify-between text-gray-300">
-                <div className="flex flex-col items-center justify-center w-full">
+                <div className="flex flex-col items-center whitespace-nowrap justify-center w-full">
                   {" "}
                   <strong>ENTRY TYPE </strong> <span>{match.entryType} </span>
                 </div>
@@ -121,7 +165,7 @@ const MatchCards = () => {
                 </div>
                 <div className="flex flex-col items-center justify-center   w-full">
                   {" "}
-                  <strong> VERSION </strong> <span>{match.version} </span>
+                  <strong> VERSION </strong> <span>MOBILE </span>
                 </div>
               </div>
 
@@ -164,7 +208,6 @@ const MatchCards = () => {
           </Card>
         ))}
       </div>
-      <FooterNav />
     </>
   );
 };
