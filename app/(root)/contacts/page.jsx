@@ -3,7 +3,7 @@ import { telegramlink, whatsapplink, fblink, facebooklink } from "@/config"; // 
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gray-950 flex my-18 p-4 justify-center">
+    <div className="min-h-screen bg-gray-950 flex p-4 justify-center">
       <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-md overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-gray-700 text-center">

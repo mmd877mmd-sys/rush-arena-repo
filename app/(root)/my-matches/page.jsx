@@ -66,7 +66,7 @@ const matches = [
 
 export default function MyMatches() {
   return (
-    <div className="min-h-screen  bg-[#0a0a1a] my-20 text-white p-4">
+    <div className="min-h-screen  bg-[#0a0a1a] text-white p-4">
       <h1 className="text-center text-2xl font-bold  mb-6">My Matches</h1>
 
       <div className="space-y-3">

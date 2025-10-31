@@ -98,7 +98,7 @@ export default function TransactionHistoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 p-4 pt-12 my-18 flex justify-center">
+    <div className="min-h-screen bg-gray-950 p-4 pt-12 flex justify-center">
       <div className="bg-gray-900 text-white w-full max-w-3xl rounded-2xl shadow-lg p-6 space-y-6">
         <h2 className="text-lg font-bold text-center mb-4">
           Transaction History

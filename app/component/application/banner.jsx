@@ -9,19 +9,22 @@ import axios from "axios";
 const slides = [
   {
     id: 1,
-    image: "/images/assets/banner1.jpg",
-    title: "New Season Arrivals",
+    image:
+      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761876748/banner2_crxpqu.jpg",
+    title: "",
     link: "",
   },
   {
     id: 2,
-    image: "/images/assets/banner2.jpg",
+    image:
+      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761876748/banner1_b0k2ww.jpg",
     title: "",
     link: "",
   },
   {
     id: 3,
-    image: "/images/assets/banner3.jpg",
+    image:
+      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761876748/banner3_endek3.jpg",
     title: "",
     link: "",
   },

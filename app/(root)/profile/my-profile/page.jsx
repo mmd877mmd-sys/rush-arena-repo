@@ -1,7 +1,7 @@
 // app/profile/page.jsx or components/ProfilePage.jsx
 export default function ProfilePage() {
   return (
-    <div className="min-h-screen my-18 bg-[#0A0127] flex flex-col items-center text-white px-4 py-6">
+    <div className="min-h-screen  bg-[#0A0127] flex flex-col items-center text-white px-4 py-6">
       {/* Header */}
       <div className="w-full max-w-md flex items-center mb-4">
         <button className="text-white text-2xl mr-2">{"←"}</button>

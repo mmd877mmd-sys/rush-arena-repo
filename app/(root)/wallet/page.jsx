@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function CashBalanceCard() {
   return (
-    <div className="min-h-screen bg-gray-950 flex my-18 p-4  justify-center ">
+    <div className="min-h-screen bg-gray-950 flex p-4  justify-center ">
       <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-md overflow-hidden">
         {/* Header */}
         <div className="p-4 border-b border-gray-700 flex justify-between items-center">

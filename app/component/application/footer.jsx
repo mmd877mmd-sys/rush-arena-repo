@@ -15,30 +15,33 @@ export default function FooterNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-[#0A0020] flex justify-around py-3 shadow-[0_-1px_10px_rgba(0,0,0,0.4)] z-50">
-      {tabs.map((tab) => {
-        const active = pathname === tab.href;
-        const Icon = tab.icon;
+    <>
+      <div className="w-full h-[90] bg-black "></div>
+      <nav className="fixed bottom-0 left-0 right-0 bg-[#0A0020] flex justify-around py-3 shadow-[0_-1px_10px_rgba(0,0,0,0.4)] z-50">
+        {tabs.map((tab) => {
+          const active = pathname === tab.href;
+          const Icon = tab.icon;
 
-        return (
-          <Link
-            key={tab.name}
-            href={tab.href}
-            className={`flex flex-col items-center text-xs font-medium transition-all duration-200 ${
-              active ? "text-purple-400" : "text-gray-400"
-            }`}
-          >
-            <div
-              className={`p-2 rounded-full transition-all ${
-                active ? "bg-purple-900/40" : "bg-transparent"
+          return (
+            <Link
+              key={tab.name}
+              href={tab.href}
+              className={`flex flex-col items-center text-xs font-medium transition-all duration-200 ${
+                active ? "text-purple-400" : "text-gray-400"
               }`}
             >
-              <Icon size={22} />
-            </div>
-            <span className="mt-1">{tab.name}</span>
-          </Link>
-        );
-      })}
-    </nav>
+              <div
+                className={`p-2 rounded-full transition-all ${
+                  active ? "bg-purple-900/40" : "bg-transparent"
+                }`}
+              >
+                <Icon size={22} />
+              </div>
+              <span className="mt-1">{tab.name}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </>
   );
 }

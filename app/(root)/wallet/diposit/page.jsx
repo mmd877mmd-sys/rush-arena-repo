@@ -110,8 +110,8 @@ export default function DepositPage() {
     !transectionId;
 
   return (
-    <div className="min-h-screen bg-gray-950 flex justify-center items-start p-4 pt-12">
-      <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-md p-6 space-y-6">
+    <div className=" bg-gray-950 flex justify-center items-start p-4 ">
+      <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full mb-6 max-w-md p-6 space-y-6">
         <h2 className="text-lg font-bold text-center">Deposit</h2>
 
         {/* Admin Deposit Info */}

@@ -1,40 +1,40 @@
-// export const dynamic = "force-dynamic"; // <---- Add this line
+export const dynamic = "force-dynamic"; // <---- Add this line
 
-// import { connectDB } from "@/lib/connectDB";
-// import Matches from "@/models/matches";
+import { connectDB } from "@/lib/connectDB";
+import Matches from "@/models/matches";
 
-// export async function GET(request) {
-//   try {
-//     await connectDB();
+export async function GET(request) {
+  try {
+    await connectDB();
 
-//     const { searchParams } = new URL(request.url);
-//     const matchType = searchParams.get("type");
+    const { searchParams } = new URL(request.url);
+    const matchType = searchParams.get("type");
 
-//     if (!matchType) {
-//       return Response.json(
-//         { message: "Match type is required" },
-//         { status: 400 }
-//       );
-//     }
+    if (!matchType) {
+      return Response.json(
+        { message: "Match type is required" },
+        { status: 400 }
+      );
+    }
 
-//     const matches = await Matches.find({ matchType });
+    const matches = await Matches.find({ matchType });
 
-//     if (!matches || matches.length === 0) {
-//       return Response.json(
-//         { message: "No matches found", data: [] },
-//         { status: 404 }
-//       );
-//     }
+    if (!matches || matches.length === 0) {
+      return Response.json(
+        { message: "No matches found", data: [] },
+        { status: 404 }
+      );
+    }
 
-//     return Response.json(
-//       { message: "Success", data: matches },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("API error:", error);
-//     return Response.json(
-//       { message: "Failed to fetch matches", error: error.message },
-//       { status: 500 }
-//     );
-//   }
-// }
+    return Response.json(
+      { message: "Success", data: matches },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("API error:", error);
+    return Response.json(
+      { message: "Failed to fetch matches", error: error.message },
+      { status: 500 }
+    );
+  }
+}

@@ -18,8 +18,7 @@ import { depositPage, transection, withdrawPage } from "@/config";
 export default function ProfileSidebar() {
   return (
     <>
-      <Navbar />
-      <div className="max-w-md mx-auto p-4 my-16">
+      <div className="max-w-md mx-auto p-4 ">
         <Card className="bg-[#0f0720] text-white shadow-lg rounded-2xl overflow-hidden">
           <CardContent className="p-6">
             <div className="flex flex-col items-center gap-4">
@@ -94,7 +93,6 @@ export default function ProfileSidebar() {
           </div>
         </Card>
       </div>
-      <FooterNav />
     </>
   );
 }
