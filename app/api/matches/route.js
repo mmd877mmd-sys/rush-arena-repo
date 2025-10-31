@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic"; // <---- Add this line
-
 import { connectDB } from "@/lib/connectDB";
 import Matches from "@/models/matches";
 
