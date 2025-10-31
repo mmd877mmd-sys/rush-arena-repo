@@ -46,7 +46,7 @@ const matches = [
     link: `/play-match/?type=${MatchType4}`,
     description: "9 matches found",
     image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/clash-squad_u3dkmq.jpg",
+      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761874882/download_vmg5ko.jpg",
   },
   {
     title: MatchType5,
