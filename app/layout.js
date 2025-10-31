@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import BackButtonHandler from "./component/BackButtonHandler";
+import InternetChecker from "./component/InternetChecker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +26,9 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <BackButtonHandler />
-        {children}
+
+        <InternetChecker>{children}</InternetChecker>
+
         <ToastContainer />
       </body>
     </html>
