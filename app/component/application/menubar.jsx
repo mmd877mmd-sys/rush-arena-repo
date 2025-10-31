@@ -35,8 +35,8 @@ export default function Navbar() {
           />
           <span className="font-medium text-white">৳ {BalanceAmount}</span>
         </div>
+        <div className="w-full h-[80] right-0 left-0 absolute "></div>
       </nav>
-      <div className="w-full h-[80] bg-black "></div>
     </>
   );
 }

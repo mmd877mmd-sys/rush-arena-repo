@@ -16,8 +16,8 @@ export default function FooterNav() {
 
   return (
     <>
-      <div className="w-full h-[90] bg-black "></div>
       <nav className="fixed bottom-0 left-0 right-0 bg-[#0A0020] flex justify-around py-3 shadow-[0_-1px_10px_rgba(0,0,0,0.4)] z-50">
+        <div className="w-full h-[90] left-0 right-0 absolute"></div>
         {tabs.map((tab) => {
           const active = pathname === tab.href;
           const Icon = tab.icon;

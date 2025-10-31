@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
+  reactStrictMode: true,
   images: {
-    unoptimized: true, // add this
+    unoptimized: true, // keep this for remote images
     remotePatterns: [
       {
         protocol: "https",
@@ -11,6 +11,9 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  experimental: {
+    serverActions: true, // optional if you use server actions
   },
 };
 
