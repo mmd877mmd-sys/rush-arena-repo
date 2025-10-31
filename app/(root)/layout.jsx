@@ -1,11 +1,11 @@
 import FooterNav from "../component/application/footer";
 import Navbar from "../component/application/menubar";
 
-export default function adminLayout({ children }) {
+export default function UserLayout({ children }) {
   return (
     <>
       <Navbar />
-      <main>{children}</main>
+      <div className="my-18 ">{children}</div>
       <FooterNav />
     </>
   );

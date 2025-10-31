@@ -7,16 +7,14 @@ import MarqueeText from "./component/application/marqueeText";
 export default function Home() {
   return (
     <div className="w-full font-sans min-h-screen flex flex-col items-center ">
-      <main className="w-full flex flex-col gap-6 items-center sm:items-center ">
-        <Navbar />
-
+      <Navbar />
+      <main className="w-full flex flex-col gap-6 items-center sm:items-center my-24   ">
         <MarqueeText text="🚀 Rush Arena — The Ultimate Battle Arena! ⚔️ Join Now • Play Fast • Win Big •" />
 
         <BannerSlider />
         <MatchCards />
-
-        <FooterNav />
       </main>
+      <FooterNav />
     </div>
   );
 }
