@@ -2,7 +2,6 @@ export const dynamic = "force-dynamic";
 ("use client");
 
 import { useState } from "react";
-
 export default function TransactionHistoryPage() {
   // Example transaction data with more dummy history
   const [transactions, setTransactions] = useState([
