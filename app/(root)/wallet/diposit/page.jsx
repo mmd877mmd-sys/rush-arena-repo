@@ -10,7 +10,11 @@ export default function DepositPage() {
   const [transectionId, setTransectionId] = useState("");
   const [success, setSuccess] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [error, setError] = useState("");
+
+  // Separate error states for each field
+  const [phoneError, setPhoneError] = useState("");
+  const [amountError, setAmountError] = useState("");
+  const [transectionError, setTransectionError] = useState("");
 
   const paymentOptions = [
     { name: "Bkash", img: "/images/assets/bkash.jpg" },
@@ -24,31 +28,59 @@ export default function DepositPage() {
     setPhone(value);
 
     if (!value) {
-      setError("");
+      setPhoneError("");
     } else if (!validatePhone(value)) {
-      setError("Invalid phone number!");
+      setPhoneError("Invalid phone number!");
     } else {
-      setError("");
+      setPhoneError("");
     }
   };
 
-  const handleTransectionChange = (e) => setTransectionId(e.target.value);
-  const handleAmountChange = (e) => setAmount(e.target.value);
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    setAmount(value);
+
+    if (!value) {
+      setAmountError("");
+    } else if (parseFloat(value) < 10 || parseFloat(value) > 25000) {
+      setAmountError("Amount must be between 10 and 25,000!");
+    } else {
+      setAmountError("");
+    }
+  };
+
+  const handleTransectionChange = (e) => {
+    const value = e.target.value;
+    setTransectionId(value);
+
+    if (!value) {
+      setTransectionError("");
+    } else {
+      setTransectionError("");
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    let valid = true;
+
     if (!validatePhone(phone)) {
-      setError("Invalid phone number!");
-      return;
+      setPhoneError("Invalid phone number!");
+      valid = false;
     }
-    if (!amount || parseFloat(amount) <= 0) {
-      setError("Enter a valid amount!");
-      return;
+
+    if (!amount || parseFloat(amount) < 10 || parseFloat(amount) > 25000) {
+      setAmountError("Amount must be between 10 and 25,000!");
+      valid = false;
     }
+
     if (!transectionId) {
-      setError("Enter transaction ID!");
-      return;
+      setTransectionError("Enter transaction ID!");
+      valid = false;
     }
+
+    if (!valid) return;
 
     console.log({ method, phone, amount, transectionId });
     setSuccess(true);
@@ -58,7 +90,9 @@ export default function DepositPage() {
     setPhone("");
     setAmount("");
     setTransectionId("");
-    setError("");
+    setPhoneError("");
+    setAmountError("");
+    setTransectionError("");
   };
 
   const handleCopyNumber = () => {
@@ -67,7 +101,13 @@ export default function DepositPage() {
     setTimeout(() => setCopySuccess(false), 1500);
   };
 
-  const isSubmitDisabled = !!error || !phone || !amount || !transectionId;
+  const isSubmitDisabled =
+    !!phoneError ||
+    !!amountError ||
+    !!transectionError ||
+    !phone ||
+    !amount ||
+    !transectionId;
 
   return (
     <div className="min-h-screen bg-gray-950 flex justify-center items-start p-4 pt-12">
@@ -125,10 +165,15 @@ export default function DepositPage() {
               type="number"
               value={amount}
               onChange={handleAmountChange}
-              placeholder="100"
+              placeholder="10-25,000"
               className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
               required
             />
+            {amountError && (
+              <p className="text-red-500 text-sm font-medium mt-1">
+                {amountError}
+              </p>
+            )}
           </div>
 
           {/* Phone */}
@@ -142,8 +187,10 @@ export default function DepositPage() {
               className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
               required
             />
-            {error && (
-              <p className="text-red-500 text-sm font-medium">{error}</p>
+            {phoneError && (
+              <p className="text-red-500 text-sm font-medium mt-1">
+                {phoneError}
+              </p>
             )}
           </div>
 
@@ -158,6 +205,11 @@ export default function DepositPage() {
               className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
               required
             />
+            {transectionError && (
+              <p className="text-red-500 text-sm font-medium mt-1">
+                {transectionError}
+              </p>
+            )}
           </div>
 
           {/* Submit Button */}

@@ -9,7 +9,7 @@ export const MatchType6 = "Free match";
 export const appLink = "#";
 export const withdrawPage = "/wallet/withdraw";
 export const depositPage = "/wallet/diposit";
-export const transection = "/wallet/transection-history";
+export const transection = "/wallet/transection";
 
 // video link
 
@@ -21,6 +21,7 @@ export const howtoaddtaka = "#";
 
 export const telegramlink = "https://t.me/yourtelegramlink";
 export const whatsapplink = "https://wa.me/88017XXXXXXXX";
+export const facebooklink = "https://facebook.com/";
 
 // numbers and payment adress
 

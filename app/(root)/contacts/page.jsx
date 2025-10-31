@@ -1,23 +1,21 @@
 "use client";
-import { telegramlink, whatsapplink } from "@/config";
-import Link from "next/link";
+import { telegramlink, whatsapplink, fblink, facebooklink } from "@/config"; // <-- Added Facebook link import
 
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-950 flex my-18 p-4 justify-center">
-      <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-md overflow-hidden">
+      <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-md overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+        <div className="p-4 border-b border-gray-700 text-center">
           <h2 className="text-lg font-bold">CONTACT SUPPORT</h2>
           <p className="text-sm text-gray-400">We’re here to help you 24/7</p>
         </div>
 
         {/* Contact Options */}
-        <div className="p-6 space-y-6">
+        <div className="p-6 flex-1 space-y-6">
           {/* Telegram */}
-          <div className="flex items-center justify-between bg-gray-800 border border-gray-700 p-4 rounded-xl hover:bg-gray-700 transition-all duration-200">
-            <div className="flex items-center space-x-3">
-              {/* Telegram SVG */}
+          <div className="bg-gray-800 border border-gray-700 p-4 rounded-xl hover:bg-gray-700 transition-all duration-200 flex flex-col">
+            <div className="flex items-center space-x-3 mb-4">
               <div className="bg-blue-500/20 p-3 rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -38,16 +36,15 @@ export default function ContactPage() {
               href={telegramlink}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium"
+              className="bg-blue-600 hover:bg-blue-700 text-center px-4 py-2 rounded-lg text-sm font-medium w-full"
             >
-              Message
+              Message on Telegram
             </a>
           </div>
 
           {/* WhatsApp */}
-          <div className="flex items-center justify-between bg-gray-800 border border-gray-700 p-4 rounded-xl hover:bg-gray-700 transition-all duration-200">
-            <div className="flex items-center space-x-3">
-              {/* WhatsApp SVG */}
+          <div className="bg-gray-800 border border-gray-700 p-4 rounded-xl hover:bg-gray-700 transition-all duration-200 flex flex-col">
+            <div className="flex items-center space-x-3 mb-4">
               <div className="bg-green-500/20 p-3 rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -68,21 +65,40 @@ export default function ContactPage() {
               href={whatsapplink}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-sm font-medium"
+              className="bg-green-600 hover:bg-green-700 text-center px-4 py-2 rounded-lg text-sm font-medium w-full"
             >
-              Chat
+              Chat on WhatsApp
             </a>
           </div>
-        </div>
 
-        {/* Footer / Help Links */}
-        <div className="bg-gray-800 border-t border-gray-700 p-4 text-center">
-          <p className="text-gray-400 text-sm">
-            Need more help? Visit our{" "}
-            <Link href="/faq" className="text-blue-400 hover:underline">
-              FAQ page
-            </Link>
-          </p>
+          {/* Facebook Page */}
+          <div className="bg-gray-800 border border-gray-700 p-4 rounded-xl hover:bg-gray-700 transition-all duration-200 flex flex-col">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="bg-blue-600/20 p-3 rounded-full">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6 text-blue-500 fill-current"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M22 12.07C22 6.52 17.52 2 12 2S2 6.52 2 12.07c0 5 3.66 9.13 8.44 9.93v-7.02H8.1v-2.91h2.34V9.85c0-2.31 1.38-3.59 3.48-3.59.99 0 2.02.18 2.02.18v2.22h-1.14c-1.13 0-1.48.7-1.48 1.42v1.7h2.52l-.4 2.91h-2.12V22c4.78-.8 8.44-4.93 8.44-9.93z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-blue-500">Facebook Page</p>
+                <p className="text-sm text-gray-300">
+                  Visit our official Facebook page
+                </p>
+              </div>
+            </div>
+            <a
+              href={facebooklink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 hover:bg-blue-700 text-center px-4 py-2 rounded-lg text-sm font-medium w-full"
+            >
+              Visit Page
+            </a>
+          </div>
         </div>
       </div>
     </div>

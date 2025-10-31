@@ -7,7 +7,10 @@ export default function WithdrawPage() {
   const [receiverPhone, setReceiverPhone] = useState("");
   const [amount, setAmount] = useState("");
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
+
+  // Separate error states
+  const [phoneError, setPhoneError] = useState("");
+  const [amountError, setAmountError] = useState("");
 
   const balance = 1000; // Example user balance
 
@@ -17,44 +20,65 @@ export default function WithdrawPage() {
   ];
 
   // Phone validation
-  const validatePhone = (phone) => {
-    const phoneRegex = /^01[3-9]\d{8}$/; // Only 11-digit numbers starting with 01
-    return phoneRegex.test(phone);
-  };
+  const validatePhone = (phone) => /^01[3-9]\d{8}$/.test(phone);
 
-  // Handle phone input changes
   const handlePhoneChange = (e) => {
     const value = e.target.value;
     setReceiverPhone(value);
 
-    if (value === "") {
-      setError("");
+    if (!value) {
+      setPhoneError("");
     } else if (!validatePhone(value)) {
-      setError("Invalid phone number!");
+      setPhoneError("Invalid phone number!");
     } else if (amount && parseFloat(amount) > balance) {
-      setError("Insufficient balance!");
+      setPhoneError(""); // keep phone valid even if balance insufficient
     } else {
-      setError("");
+      setPhoneError("");
     }
   };
 
-  // Handle amount changes
   const handleAmountChange = (e) => {
     const value = e.target.value;
     setAmount(value);
 
-    if (value && parseFloat(value) > balance) {
-      setError("Insufficient balance!");
-    } else if (receiverPhone && !validatePhone(receiverPhone)) {
-      setError("Invalid phone number!");
+    if (!value) {
+      setAmountError("");
+    } else if (parseFloat(value) < 105) {
+      setAmountError("Minimum withdrawal amount is 105!");
+    } else if (parseFloat(value) > balance) {
+      setAmountError("Insufficient balance!");
     } else {
-      setError("");
+      setAmountError("");
+    }
+
+    // Revalidate phone error if needed
+    if (receiverPhone && !validatePhone(receiverPhone)) {
+      setPhoneError("Invalid phone number!");
+    } else {
+      setPhoneError("");
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (error) return;
+
+    let valid = true;
+
+    if (!validatePhone(receiverPhone)) {
+      setPhoneError("Invalid phone number!");
+      valid = false;
+    }
+
+    if (!amount || parseFloat(amount) < 105 || parseFloat(amount) > balance) {
+      setAmountError(
+        parseFloat(amount) < 105
+          ? "Minimum withdrawal amount is 105!"
+          : "Insufficient balance!"
+      );
+      valid = false;
+    }
+
+    if (!valid) return;
 
     console.log({ method, receiverPhone, amount });
     setSuccess(true);
@@ -64,19 +88,20 @@ export default function WithdrawPage() {
     // Clear form
     setReceiverPhone("");
     setAmount("");
+    setPhoneError("");
+    setAmountError("");
   };
 
   const isSubmitDisabled =
-    !receiverPhone || !amount || !!error || parseFloat(amount) > balance;
+    !receiverPhone || !amount || !!phoneError || !!amountError;
 
   return (
     <div className="min-h-screen bg-gray-950 flex justify-center items-start p-4 pt-12">
       <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-md p-6 space-y-6">
-        {/* Header */}
         <h2 className="text-lg font-bold text-center">Withdraw</h2>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Payment Method as selectable image boxes */}
+          {/* Payment Method */}
           <div>
             <p className="text-gray-400 mb-2">Select Payment Method</p>
             <div className="flex space-x-4">
@@ -111,10 +136,15 @@ export default function WithdrawPage() {
               type="number"
               value={amount}
               onChange={handleAmountChange}
-              placeholder="100"
+              placeholder="105-25,000"
               className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
               required
             />
+            {amountError && (
+              <p className="text-red-500 text-sm font-medium mt-1">
+                {amountError}
+              </p>
+            )}
           </div>
 
           {/* Receiver Phone */}
@@ -128,15 +158,16 @@ export default function WithdrawPage() {
               className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
               required
             />
+            {phoneError && (
+              <p className="text-red-500 text-sm font-medium mt-1">
+                {phoneError}
+              </p>
+            )}
           </div>
-
-          {/* Error Message */}
-          {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
 
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isSubmitDisabled}
             className={`w-full py-3 rounded-lg font-medium transition ${
               isSubmitDisabled
                 ? "bg-gray-600 cursor-not-allowed"
