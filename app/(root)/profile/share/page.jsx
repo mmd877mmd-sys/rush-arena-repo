@@ -1,38 +1,39 @@
 "use client";
 
-import { appLink } from "@/config";
 import { useState } from "react";
-import { Share } from "@capacitor/share"; // <-- Capacitor Share plugin
+import { Share } from "@capacitor/share";
+import { appLink } from "@/config";
 
 export default function SharePage() {
-  const [shareSuccess, setShareSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
 
   const valueToCopy = appLink;
 
   const handleShare = async () => {
     try {
-      // ✅ Use Capacitor's native share on mobile
+      // ✅ Native share on Android/iOS (opens app list: WhatsApp, FB, Messenger, etc.)
       await Share.share({
         title: "Check out this App!",
         text: "Hey! I found this awesome app, check it out:",
-        url: appLink,
+        url: valueToCopy,
         dialogTitle: "Share via",
       });
-      setShareSuccess(true);
-    } catch (error) {
-      console.error("Share failed:", error);
 
-      // fallback: copy link if share not supported
+      setShareSuccess(true);
+      setTimeout(() => setShareSuccess(false), 2000);
+    } catch (error) {
+      console.warn("Native share failed:", error);
+
+      // fallback for browsers or emulators without native share
       try {
         await navigator.clipboard.writeText(valueToCopy);
-        setShareSuccess(true);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       } catch (err) {
-        console.error("Failed to copy link!", err);
+        console.error("Clipboard failed:", err);
       }
     }
-
-    setTimeout(() => setShareSuccess(false), 2000);
   };
 
   const handleCopy = async () => {
@@ -41,7 +42,7 @@ export default function SharePage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy!", err);
+      console.error("Failed to copy link!", err);
     }
   };
 
@@ -76,7 +77,7 @@ export default function SharePage() {
 
         {shareSuccess && (
           <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-xl shadow-lg z-50">
-            Link shared successfully!
+            Shared successfully!
           </div>
         )}
       </div>

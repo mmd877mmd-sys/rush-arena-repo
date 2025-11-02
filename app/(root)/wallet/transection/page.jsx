@@ -1,88 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Preferences } from "@capacitor/preferences";
+import { appLink } from "@/config";
 
 export default function TransactionHistoryPage() {
-  // Example transaction data with more dummy history
-  const [transactions, setTransactions] = useState([
-    {
-      id: 1,
-      type: "Deposit",
-      method: "Bkash",
-      amount: 500,
-      phone: "01712345678",
-      transectionId: "TRX12345",
-      date: "2025-10-30 12:45",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      type: "Withdraw",
-      method: "Nagad",
-      amount: 200,
-      phone: "01898765432",
-      transectionId: "TRX12346",
-      date: "2025-10-29 16:20",
-      status: "Completed",
-    },
-    {
-      id: 3,
-      type: "Deposit",
-      method: "Bkash",
-      amount: 1000,
-      phone: "01911223344",
-      transectionId: "TRX12347",
-      date: "2025-10-28 10:15",
-      status: "Completed",
-    },
-    {
-      id: 4,
-      type: "Withdraw",
-      method: "Bkash",
-      amount: 300,
-      phone: "01755555555",
-      transectionId: "TRX12348",
-      date: "2025-10-27 09:50",
-      status: "Failed",
-    },
-    {
-      id: 5,
-      type: "Deposit",
-      method: "Nagad",
-      amount: 700,
-      phone: "01811112222",
-      transectionId: "TRX12349",
-      date: "2025-10-26 14:30",
-      status: "Completed",
-    },
-    {
-      id: 6,
-      type: "Withdraw",
-      method: "Bkash",
-      amount: 150,
-      phone: "01933334444",
-      transectionId: "TRX12350",
-      date: "2025-10-25 11:20",
-      status: "Pending",
-    },
-    {
-      id: 7,
-      type: "Deposit",
-      method: "Bkash",
-      amount: 1200,
-      phone: "01766667777",
-      transectionId: "TRX12351",
-      date: "2025-10-24 08:10",
-      status: "Completed",
-    },
-  ]);
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Sort latest first
-  const sortedTransactions = [...transactions].sort(
-    (a, b) => new Date(b.date) - new Date(a.date)
-  );
-
-  // Function to get card bg color based on status
   const getStatusBgColor = (status) => {
     switch (status) {
       case "Completed":
@@ -96,56 +22,123 @@ export default function TransactionHistoryPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-950 p-4 pt-12 flex justify-center">
-      <div className="bg-gray-900 text-white w-full max-w-3xl rounded-2xl shadow-lg p-6 space-y-6">
-        <h2 className="text-lg font-bold text-center mb-4">
-          Transaction History
-        </h2>
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-        {sortedTransactions.length === 0 ? (
-          <p className="text-gray-400 text-center">No transactions found.</p>
-        ) : (
-          <div className="space-y-4">
-            {sortedTransactions.map((txn, index) => (
-              <div
-                key={index}
-                className={`rounded-lg p-4 flex justify-between md:flex-row md:items-center ${getStatusBgColor(
-                  txn.status
-                )}`}
-              >
-                <div className="flex flex-col space-y-1">
-                  <span className="font-semibold">
-                    {txn.type} - {txn.method}
-                  </span>
-                  <span className="text-gray-200 text-sm">
-                    Phone: {txn.phone}
-                  </span>
-                  {txn.transectionId && (
-                    <span className="text-gray-200 text-sm">
-                      Transaction ID: {txn.transectionId}
+        // Get token (userId) from Capacitor Preferences
+        const { value: userId } = await Preferences.get({
+          key: "access_token",
+        });
+
+        if (!userId) {
+          setError("You are not logged in!");
+          setLoading(false);
+          return;
+        }
+
+        const res = await fetch(
+          `${appLink}/api/wallets/transections?userId=${userId}`
+        );
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || "Failed to fetch transactions");
+        }
+
+        setTransactions(data.transactions || []);
+      } catch (err) {
+        console.error("Error fetching transactions:", err);
+        setError(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  const sortedTransactions = [...transactions].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  return (
+    <>
+      {/* Loading State */}
+      {loading && (
+        <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+          <div className="w-16 h-16 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+        </div>
+      )}
+      <div className="min-h-screen bg-gray-950 p-4 pt-12 flex justify-center">
+        <div className="bg-gray-900 text-white w-full max-w-3xl rounded-2xl shadow-lg p-6 space-y-6">
+          <h2 className="text-lg font-bold text-center mb-4">
+            Transaction History
+          </h2>
+
+          {/* Error State */}
+          {!loading && error && (
+            <div className="text-center text-red-400 py-8 font-medium">
+              {error}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && sortedTransactions.length === 0 && (
+            <p className="text-gray-400 text-center py-8">
+              No transactions found.
+            </p>
+          )}
+
+          {/* Transaction List */}
+          {!loading && !error && sortedTransactions.length > 0 && (
+            <div className="space-y-4">
+              {sortedTransactions.map((txn, index) => (
+                <div
+                  key={index}
+                  className={`rounded-lg p-4 flex justify-between md:flex-row md:items-center ${getStatusBgColor(
+                    txn.status
+                  )}`}
+                >
+                  <div className="flex flex-col space-y-1">
+                    <span className="font-semibold">
+                      {txn.type} - {txn.method}
                     </span>
-                  )}
+                    <span className="text-gray-200 text-sm">
+                      Phone: {txn.phone}
+                    </span>
+                    {txn.id && (
+                      <span className="text-gray-200 text-sm">
+                        Transaction ID: {txn.id}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-end mt-2 md:mt-0">
+                    <span
+                      className={`font-bold ${
+                        txn.type === "Deposit"
+                          ? "text-green-300"
+                          : "text-red-300"
+                      }`}
+                    >
+                      {txn.type === "Deposit" ? "+" : "-"}
+                      {txn.amount} ৳
+                    </span>
+                    <span className="mt-1 text-xs font-medium px-2 py-1 rounded-full bg-white text-black">
+                      {txn.status}
+                    </span>
+                    <span className="text-gray-200 text-sm mt-1">
+                      {new Date(txn.createdAt).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col items-end mt-2 md:mt-0">
-                  <span
-                    className={`font-bold ${
-                      txn.type === "Deposit" ? "text-green-300" : "text-red-300"
-                    }`}
-                  >
-                    {txn.type === "Deposit" ? "+" : "-"}
-                    {txn.amount} ৳
-                  </span>
-                  <span className="mt-1 text-xs font-medium px-2 py-1 rounded-full bg-white text-black">
-                    {txn.status}
-                  </span>
-                  <span className="text-gray-200 text-sm mt-1">{txn.date}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>{" "}
+    </>
   );
 }

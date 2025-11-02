@@ -12,14 +12,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-
+import { Preferences } from "@capacitor/preferences";
 import { web_home, web_login } from "@/routes/websiteRoute";
 import { signupSchema } from "@/lib/zodSchema";
 import Logo from "@/public/images/logo.jpg";
-// import ButtonLoading from "@/app/commponet/Application/buttonLoading";
-// import { showToast } from "@/app/commponet/Application/tostify";
-import { Button } from "@/components/ui/button";
+
 import { showToast } from "@/app/component/application/tostify";
+import { appLink } from "@/config";
+import ButtonLoading from "@/app/component/buttonLoading";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,22 +36,39 @@ export default function SignupPage() {
   });
 
   const onSubmit = async (data) => {
+    console.log(data);
+
     try {
       setloading(true);
-      const dataToSubmit = { ...data };
-      const { data: signupResponse } = await axios.post(
-        "/api/auth/signup",
-        dataToSubmit
-      );
 
+      // Send signup request
+      const res = await axios.post(`${appLink}/api/auth/signup`, data);
+      const signupResponse = res.data;
+
+      // Handle failure
       if (!signupResponse.success) {
-        return showToast("error", signupResponse.message);
+        showToast("error", signupResponse.message || "Signup failed");
+        return;
       }
+
+      // Save token in Capacitor Storage (works in APK + web)
+      const token = signupResponse.token;
+      if (token) {
+        await Preferences.set({ key: "access_token", value: token });
+      }
+
+      // Reset form and show success
       reset();
-      showToast("success", signupResponse.message);
-      return router.push(web_home);
+      showToast("success", signupResponse.message || "Signup successful");
+
+      // Redirect user
+      // router.push(web_home); // replace with your dashboard/home path
     } catch (error) {
-      showToast("error", error.message);
+      console.error("Signup error:", error);
+      showToast(
+        "error",
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
     } finally {
       setloading(false);
     }
@@ -97,6 +114,19 @@ export default function SignupPage() {
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
+            {/* Phone */}
+            <div className="space-y-1">
+              <Label htmlFor="phone">Phone</Label>
+              <Input
+                id="phone"
+                type="text"
+                placeholder="01xxxxxxxxx"
+                {...register("phone")}
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone.message}</p>
               )}
             </div>
 
@@ -164,9 +194,12 @@ export default function SignupPage() {
               )}
             </div>
 
-            <Button className="w-full" type="submit">
-              Sign up
-            </Button>
+            <ButtonLoading
+              type={"submit"}
+              text={"Sign up"}
+              className={"w-full"}
+              loading={loading}
+            />
           </form>
 
           <div className="mt-4 text-center text-sm">

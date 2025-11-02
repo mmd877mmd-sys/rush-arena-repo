@@ -1,5 +1,5 @@
 import { connectDB } from "@/lib/connectDB";
-import matches from "@/models/matches";
+import Matches from "@/models/matches"; // use capital M for convention
 
 export async function POST(req) {
   try {
@@ -7,7 +7,10 @@ export async function POST(req) {
 
     const body = await req.json();
     const data = body.data;
-    const createMatch = matches.insertOne(data);
+
+    // Create the match document
+    const createMatch = await Matches.create(data);
+
     if (!createMatch) {
       return Response.json(
         { message: "Failed to create Match", data },
@@ -15,11 +18,14 @@ export async function POST(req) {
       );
     }
 
-    return Response.json({ message: "sended", data }, { status: 200 });
-  } catch (error) {
-    console.error(" POST /products error:", error);
     return Response.json(
-      { message: "Failed to create product", error: error.message },
+      { message: "Match created", data: createMatch },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("POST /matches error:", error);
+    return Response.json(
+      { message: "Failed to create Match", error: error.message },
       { status: 500 }
     );
   }

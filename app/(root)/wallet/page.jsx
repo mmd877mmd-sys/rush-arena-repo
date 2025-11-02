@@ -9,7 +9,41 @@ import {
 } from "@/config";
 import Link from "next/link";
 
+import React, { useEffect, useState } from "react";
+
+import { Preferences } from "@capacitor/preferences";
+import { appLink } from "@/config";
+
 export default function CashBalanceCard() {
+  const [BalanceAmount, setbalance] = useState(0);
+  const [dipoBalance, setdipobalance] = useState(0);
+  const [winBalance, setwinbalance] = useState(0);
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const { value } = await Preferences.get({ key: "access_token" });
+
+        if (!value) {
+          showToast("error", "Please login to continue!");
+          return;
+        }
+
+        const res = await fetch(
+          `${appLink}/api/getuser?authId=${encodeURIComponent(value)}`
+        );
+
+        const data = await res.json();
+        await setbalance(data.data.dipositbalance + data.data.winbalance);
+        await setdipobalance(data.data.dipositbalance);
+        await setwinbalance(data.data.winbalance);
+      } catch (error) {
+        console.error("Error loading user data:", error);
+      }
+    }
+
+    loadUser();
+  }, []);
   return (
     <div className="min-h-screen bg-gray-950 flex p-4  justify-center ">
       <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-md overflow-hidden">
@@ -30,14 +64,18 @@ export default function CashBalanceCard() {
         <div className="p-4 space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-3xl font-extrabold ps-4">৳0</p>
+              <p className="text-3xl font-extrabold ps-4">
+                ৳{isNaN(Number(BalanceAmount)) ? 0 : Number(BalanceAmount)}
+              </p>
             </div>
           </div>
 
           <div className="flex justify-between items-center">
             <div>
               <p className="text-gray-400 text-sm">🏆 WINNING CASH BALANCE</p>
-              <p className="text-xl font-bold ps-4">৳0</p>
+              <p className="text-xl font-bold ps-4">
+                ৳{isNaN(Number(winBalance)) ? 0 : Number(winBalance)}
+              </p>
             </div>
             <Link
               href={withdrawPage}
@@ -50,7 +88,9 @@ export default function CashBalanceCard() {
           <div className="flex justify-between items-center">
             <div>
               <p className="text-gray-400 text-sm">🏦 DEPOSIT CASH</p>
-              <p className="text-xl font-bold ps-4">৳0</p>
+              <p className="text-xl font-bold ps-4">
+                ৳{isNaN(Number(dipoBalance)) ? 0 : Number(dipoBalance)}
+              </p>
             </div>
             <Link
               href={depositPage}

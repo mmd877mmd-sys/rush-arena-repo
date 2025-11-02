@@ -23,42 +23,36 @@ const matches = [
   {
     title: MatchType1,
     link: `/play-match/?type=${MatchType1}`,
-    description: "7 matches found",
     image:
       "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068487/br-match_itpoat.jpg",
   },
   {
     title: MatchType2,
     link: `/play-match/?type=${MatchType2}`,
-    description: "13 matches found",
     image:
       "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/clash-squad_u3dkmq.jpg",
   },
   {
     title: MatchType3,
     link: `/play-match/?type=${MatchType3}`,
-    description: "5 matches found",
     image:
       "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/lone-wolf_wombhk.jpg",
   },
   {
     title: MatchType4,
     link: `/play-match/?type=${MatchType4}`,
-    description: "9 matches found",
     image:
       "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761874882/download_vmg5ko.jpg",
   },
   {
     title: MatchType5,
     link: `/play-match/?type=${MatchType5}`,
-    description: "9 matches found",
     image:
       "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/squad-brRank_etzfrb.jpg",
   },
   {
     title: MatchType6,
     link: `/play-match/?type=${MatchType6}`,
-    description: "3 matches found",
     image:
       "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068487/free-match_k9jszq.jpg",
   },

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -31,9 +31,11 @@ import {
 } from "@/config";
 
 export default function TournamentForm() {
+  const [prizeDetails, setPrizeDetails] = useState(false);
+
   const form = useForm({
     defaultValues: {
-      title: "Solo Time | Mobile | Regular",
+      title: "",
       matchType: "",
       startTime: "",
       winPrize: 405,
@@ -41,21 +43,21 @@ export default function TournamentForm() {
       entryFee: 10,
       entryType: "Solo",
       map: "Bermuda",
+      prizeDetails: true,
       joined: 0,
       totalSpots: 48,
     },
   });
 
   const onSubmit = async (data) => {
-    showToast("success", "added");
-
     try {
       const res = await axios.post("/api/addMatch", { data });
       if (!res) {
         showToast("error", res.message);
       }
+      showToast("success", "Added successfully");
     } catch (err) {
-      showToast("error", err.error);
+      showToast("error", err.message);
     }
   };
 
@@ -80,6 +82,8 @@ export default function TournamentForm() {
             </FormItem>
           )}
         />
+
+        {/* Match Type */}
         <FormField
           control={form.control}
           name="matchType"
@@ -106,6 +110,7 @@ export default function TournamentForm() {
             </FormItem>
           )}
         />
+
         {/* Date & Time */}
         <FormField
           control={form.control}
@@ -118,7 +123,6 @@ export default function TournamentForm() {
                 <Input
                   {...field}
                   type="datetime-local"
-                  value={field.value}
                   onChange={(e) => field.onChange(e.target.value)}
                 />
               </FormControl>
@@ -127,21 +131,89 @@ export default function TournamentForm() {
           )}
         />
 
-        {/* Win Prize */}
-        <FormField
-          control={form.control}
-          name="winPrize"
-          rules={{ required: "Win Prize is required" }}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Win Prize</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <FormField
+              control={form.control}
+              name="winPrize"
+              rules={{ required: "Win Prize is required" }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Win Prize</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex-1">
+            <FormField
+              control={form.control}
+              name="prizeDetails"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Prize Details</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value === "true");
+                        setPrizeDetails(value === "true");
+                      }}
+                      value={field.value ? "true" : "false"}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select one" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={true}>Yes</SelectItem>
+                        <SelectItem value={false}>No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Prize Fields (visible only when prizeDetails = true) */}
+        {prizeDetails && (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 border bg-black/5 p-3 rounded">
+            {[
+              "firstPrize",
+              "secondPrize",
+              "thirdPrize",
+              "fourthPrize",
+              "fifthPrize",
+            ].map((name, index) => (
+              <FormField
+                key={name}
+                control={form.control}
+                name={name}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{`${index + 1}${
+                      index === 0
+                        ? "st"
+                        : index === 1
+                        ? "nd"
+                        : index === 2
+                        ? "rd"
+                        : "th"
+                    } Prize`}</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="number" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Per Kill */}
         <FormField
@@ -198,7 +270,6 @@ export default function TournamentForm() {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -228,7 +299,6 @@ export default function TournamentForm() {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -246,12 +316,11 @@ export default function TournamentForm() {
               <FormControl>
                 <Input {...field} type="number" />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Submit Button */}
+        {/* Submit */}
         <Button type="submit" className="w-full mt-4">
           Save Tournament
         </Button>

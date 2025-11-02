@@ -7,40 +7,55 @@ export default function InternetChecker({ children }) {
   const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
-    // Check initial connection
-    const checkStatus = async () => {
+    const checkConnection = async () => {
       try {
         const status = await Network.getStatus();
-        setIsOnline(status.connected);
-      } catch (err) {
-        // Fallback for web
+        setIsOnline(status.connected && navigator.onLine);
+      } catch {
         setIsOnline(navigator.onLine);
       }
     };
 
-    // Listen for connection changes
-    const listener = Network.addListener("networkStatusChange", (status) => {
-      setIsOnline(status.connected);
-    });
+    const capacitorListener = Network.addListener(
+      "networkStatusChange",
+      (status) => {
+        setIsOnline(status.connected && navigator.onLine);
+      }
+    );
 
-    // Web fallback listeners
-    const updateStatus = () => setIsOnline(navigator.onLine);
-    window.addEventListener("online", updateStatus);
-    window.addEventListener("offline", updateStatus);
+    const browserListener = () => setIsOnline(navigator.onLine);
+    window.addEventListener("online", browserListener);
+    window.addEventListener("offline", browserListener);
 
-    checkStatus();
+    checkConnection();
 
     return () => {
-      listener.remove();
-      window.removeEventListener("online", updateStatus);
-      window.removeEventListener("offline", updateStatus);
+      capacitorListener.remove();
+      window.removeEventListener("online", browserListener);
+      window.removeEventListener("offline", browserListener);
     };
   }, []);
 
   if (!isOnline) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white text-xl">
-        <p>No Internet Connection</p>
+        {/* Offline Icon */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-16 h-16 mb-4 text-red-500"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M1.5 12a10.5 10.5 0 0119.86-4.24M12 6v6l3 3m6 3a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+
+        <p className="font-bold">No Internet Connection</p>
         <p className="text-sm text-gray-400 mt-2">
           Please check your Wi-Fi or mobile data.
         </p>

@@ -1,18 +1,110 @@
-// app/profile/page.jsx or components/ProfilePage.jsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Preferences } from "@capacitor/preferences";
+import axios from "axios";
+
+import { Input } from "@/components/ui/input";
+import ButtonLoading from "@/app/component/buttonLoading";
+import { showToast } from "@/app/component/application/tostify";
+import { appLink } from "@/config";
+import { passwordSchema } from "@/lib/zodSchema";
+
+import { Eye, EyeOff } from "lucide-react";
+
 export default function ProfilePage() {
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [loggedAuth, setLoggedAuth] = useState({});
+  const [authId, setAuthId] = useState(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(passwordSchema),
+  });
+
+  useEffect(() => {
+    async function loadUser() {
+      setLoaded(true);
+      try {
+        const { value } = await Preferences.get({ key: "access_token" });
+
+        if (!value) {
+          showToast("error", "Please login to continue!");
+          return;
+        }
+        setAuthId(value);
+
+        const res = await fetch(
+          `${appLink}/api/getuser?authId=${encodeURIComponent(value)}`
+        );
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          showToast("error", errorData.message || "Failed to fetch user.");
+          return;
+        }
+
+        const data = await res.json();
+        setLoggedAuth(data.data);
+      } catch (error) {
+        console.error("Error loading user data:", error);
+        showToast("error", "Failed to load user data.");
+      } finally {
+        setLoaded(false);
+      }
+    }
+
+    loadUser();
+  }, []);
+
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      data.authId = loggedAuth._id;
+      const res = await axios.post(`${appLink}/api/auth/changePassword`, data);
+      const response = res.data;
+
+      if (!response.success) {
+        showToast("error", response.message || "Update failed");
+        return;
+      }
+
+      reset();
+      showToast("success", response.message || "Password changed successfully");
+    } catch (error) {
+      console.error("Update error:", error);
+      showToast(
+        "error",
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen  bg-[#0A0127] flex flex-col items-center text-white px-4 py-6">
-      {/* Header */}
-      <div className="w-full max-w-md flex items-center mb-4">
-        <button className="text-white text-2xl mr-2">{"←"}</button>
-        <h1 className="text-xl font-semibold">My Profile</h1>
-      </div>
+    <div className="min-h-screen bg-[#0A0127] flex flex-col items-center text-white px-4 py-6">
+      {/* Loader */}
+      {loaded && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+        </div>
+      )}
 
       {/* Profile Card */}
       <div className="w-full max-w-md bg-white/10 rounded-2xl p-6 mb-4">
         <div className="flex flex-col items-center">
           <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-3">
-            {/* Profile Icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -28,24 +120,14 @@ export default function ProfilePage() {
               />
             </svg>
           </div>
-          <h2 className="text-lg font-semibold">Yanur</h2>
-          <p className="text-gray-300 text-sm break-all">
-            mdyanur01990681247@gmail.com
-          </p>
+          <h2 className="text-lg font-semibold">{loggedAuth.name}</h2>
+          <p className="text-gray-300 text-sm break-all">{loggedAuth.email}</p>
         </div>
       </div>
 
       {/* Basic Details */}
       <div className="w-full max-w-md bg-white/10 rounded-2xl p-6 mb-4">
-        <h3 className="text-lg font-semibold mb-4 flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            className="w-5 h-5 mr-2 text-gray-300"
-            viewBox="0 0 16 16"
-          >
-            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 100-6 3 3 0 000 6z" />
-          </svg>
+        <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-300">
           Basic Details
         </h3>
 
@@ -57,15 +139,19 @@ export default function ProfilePage() {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="w-4 h-4 text-gray-300"
                 viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                className="w-4 h-4 text-gray-300"
               >
-                <path d="M13 16h-1v-4h-1m1-4h.01M12 20h.01M19 12h.01M5 12h.01M12 4h.01" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5.121 17.804A9 9 0 0112 15a9 9 0 016.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
             </div>
-            <p className="text-white text-sm">Yanur</p>
+            <p className="text-white text-sm">{loggedAuth.name}</p>
           </div>
         </div>
 
@@ -86,11 +172,11 @@ export default function ProfilePage() {
                 <path d="M22,6l-10,7L2,6" />
               </svg>
             </div>
-            <p className="text-white text-sm break-all">mdyanur01990681247@</p>
+            <p className="text-white text-sm break-all">{loggedAuth.email}</p>
           </div>
         </div>
 
-        {/* Mobile Number */}
+        {/* Phone */}
         <div>
           <p className="text-gray-400 text-sm">Mobile Number</p>
           <div className="flex items-center mt-1">
@@ -106,69 +192,126 @@ export default function ProfilePage() {
                 <path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013 5.18 2 2 0 015 3h3a2 2 0 012 1.72c.12.81.3 1.61.57 2.39a2 2 0 01-.45 2.11L9.91 10.09a16.06 16.06 0 006 6l1.87-1.18a2 2 0 012.11-.45c.78.27 1.58.45 2.39.57A2 2 0 0122 16.92z" />
               </svg>
             </div>
-            <p className="text-white text-sm">1939972558</p>
+            <p className="text-white text-sm">{loggedAuth.phone}</p>
           </div>
         </div>
       </div>
 
       {/* Password Change */}
       <div className="w-full max-w-md bg-white/10 rounded-2xl p-6">
-        <h3 className="text-lg font-semibold mb-4 flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            className="w-5 h-5 mr-2 text-gray-300"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 11c0-1.1.9-2 2-2h8v10H2V9h10z" />
-          </svg>
+        <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-300">
           Password Change
         </h3>
 
-        {["Current Password", "New Password", "Confirm Password"].map(
-          (label, index) => (
-            <div className="mb-3" key={index}>
-              <p className="text-gray-400 text-sm mb-1">{label}</p>
-              <div className="flex items-center bg-gray-900 rounded-lg px-3 py-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-4 h-4 mr-2 text-gray-400"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 17a2 2 0 100-4 2 2 0 000 4z" />
-                  <path d="M6 21h12V10H6z" />
-                  <path d="M9 10V7a3 3 0 016 0v3" />
-                </svg>
-                <input
-                  type="password"
-                  placeholder={label}
-                  className="bg-transparent outline-none flex-1 text-white text-sm"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-4 h-4 text-gray-400 cursor-pointer"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              </div>
-            </div>
-          )
-        )}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col space-y-4"
+        >
+          {/* Current Password */}
+          <div className="relative">
+            <Input
+              id="oldpassword"
+              type={showOldPassword ? "text" : "password"}
+              placeholder="********"
+              {...register("oldpassword")}
+              className="pr-10"
+            />
+            <button
+              type="button"
+              aria-label={showOldPassword ? "Hide password" : "Show password"}
+              onClick={() => setShowOldPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              {showOldPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
+            {errors.oldpassword && (
+              <p className="text-red-500 text-sm">
+                {errors.oldpassword.message}
+              </p>
+            )}
+          </div>
 
-        <button className="w-full bg-gray-900 hover:bg-gray-800 mt-4 text-white font-semibold py-2 rounded-lg">
-          Change Password
-        </button>
+          {/* New Password */}
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="********"
+              {...register("password")}
+              className="pr-10"
+            />
+            <button
+              type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
+          </div>
+
+          {/* Confirm Password */}
+          <div className="relative">
+            <Input
+              id="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="********"
+              {...register("confirmPassword")}
+              className="pr-10"
+            />
+            <button
+              type="button"
+              aria-label={
+                showConfirmPassword ? "Hide password" : "Show password"
+              }
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm">
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
+
+          <ButtonLoading
+            type="submit"
+            text="Save Changes"
+            className="w-full bg-gray-700 hover:bg-gray-600 mt-4 text-white font-semibold py-2 rounded-lg"
+            loading={loading}
+          />
+        </form>
       </div>
+
+      {/* Loader animation */}
+      <style jsx>{`
+        .loader {
+          border-top-color: #3b82f6;
+          animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }

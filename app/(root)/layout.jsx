@@ -1,3 +1,4 @@
+"use client";
 import FooterNav from "../component/application/footer";
 import Navbar from "../component/application/menubar";
 

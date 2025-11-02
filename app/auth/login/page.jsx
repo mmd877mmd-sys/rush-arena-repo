@@ -10,24 +10,21 @@ import axios from "axios";
 
 import { loginSchema } from "@/lib/zodSchema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  web_signup,
-  web_forgot_password,
-  user_dashboard,
-  admin_dashboard,
-} from "@/routes/websiteRoute";
+import { web_signup, web_forgot_password } from "@/routes/websiteRoute";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/public/images/logo.jpg";
 import { useRouter } from "next/navigation";
-// import { useDispatch } from "react-redux";
+
+import { Preferences } from "@capacitor/preferences";
+import { appLink } from "@/config";
+import ButtonLoading from "@/app/component/buttonLoading";
 import { showToast } from "@/app/component/application/tostify";
 import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
-  // const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const {
@@ -39,29 +36,39 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (formData) => {
     try {
-      setloading(true);
-      const dataToSubmit = { ...data };
-      const { data: loginResponse } = await axios.post(
-        "/api/auth/login",
-        dataToSubmit
-      );
+      setLoading(true);
+
+      // Send login request
+      const res = await axios.post("/api/auth/login", formData);
+      const loginResponse = res.data;
+
       if (!loginResponse.success) {
-        return showToast("error", loginResponse.message);
+        showToast("error", loginResponse.message || "Login failed");
+        return;
       }
+
+      const token = loginResponse.token;
+
+      // Save token in Capacitor Preferences (works in APK + web)
+      if (token) {
+        await Preferences.set({ key: "access_token", value: token });
+      }
+
       reset();
-      showToast("success", loginResponse.message);
-      // dispatch(login(loginResponse.data));
+      showToast("success", loginResponse.message || "Login successful");
 
-      const dashboard =
-        loginResponse.data.role === "admin" ? admin_dashboard : user_dashboard;
-
-      return router.push(dashboard);
+      // Redirect user
+      window.location.href = appLink; // or use router.push(appLink)
     } catch (error) {
-      showToast("error", error.message);
+      console.error("Login error:", error);
+      showToast(
+        "error",
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
@@ -132,20 +139,18 @@ export default function LoginPage() {
               )}
             </div>
 
-            <Button className="w-full" type="submit">
-              Log in
-            </Button>
+            <ButtonLoading
+              type={"submit"}
+              text={"Log in"}
+              className={"w-full"}
+              loading={loading}
+            />
           </form>
 
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link href={web_signup} className="text-primary underline">
               Create one
-            </Link>
-          </div>
-          <div className="mt-2 text-center text-sm">
-            <Link href={web_forgot_password} className="text-primary underline">
-              Forgot password?
             </Link>
           </div>
         </CardContent>

@@ -46,12 +46,7 @@ export default function RulesPage() {
       </p>
     </>,
 
-    // --- Other tabs placeholder content ---
-    <p className="text-gray-300 mt-3">⚙️ Clash Squad Rules content here...</p>,
-    <p className="text-gray-300 mt-3">🎥 Live Rules content here...</p>,
-    <p className="text-gray-300 mt-3">💰 Payment Rules content here...</p>,
-    <p className="text-gray-300 mt-3">🏆 Reward Rules content here...</p>,
-    <p className="text-gray-300 mt-3">📞 Support Rules content here...</p>,
+    //
   ];
 
   // Auto-center selected tab
@@ -93,7 +88,7 @@ export default function RulesPage() {
 
       {/* Content */}
       <div className="bg-gray-900 p-4 rounded-2xl shadow-lg text-sm leading-relaxed">
-        {contents[activeTab]}
+        {contents[0]}
       </div>
     </div>
   );
