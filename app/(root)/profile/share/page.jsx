@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { Share } from "@capacitor/share";
-import { appLink } from "@/config";
 
 export default function SharePage() {
   const [copied, setCopied] = useState(false);
   const [shareSuccess, setShareSuccess] = useState(false);
 
-  const valueToCopy = appLink;
+  const valueToCopy = process.env.appLink;
 
   const handleShare = async () => {
     try {

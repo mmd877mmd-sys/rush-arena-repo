@@ -1,7 +1,7 @@
 "use client";
 import {
   telegramlink,
-  whatsapplink,
+  whatsappLink,
   facebooklink,
   youtubelink, // ✅ Added YouTube link import
 } from "@/config";
@@ -130,7 +130,7 @@ export default function ContactPage() {
               </div>
             </div>
             <a
-              href={whatsapplink}
+              href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-600 hover:bg-green-700 text-center px-4 py-2 rounded-lg text-sm font-medium w-full"

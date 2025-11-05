@@ -14,6 +14,11 @@ const JoinedPlayerSchema = new mongoose.Schema({
     ref: "User", // or mongoose.Schema.Types.ObjectId if you link to a User model
     required: true,
   },
+  userName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
 });
 
 const MatchesSchema = new mongoose.Schema({
@@ -64,9 +69,8 @@ const MatchesSchema = new mongoose.Schema({
     required: true,
   },
   priseDetails: {
-    type: Boolean,
-    required: true,
-    default: true,
+    type: [],
+    default: [],
   },
   startTime: {
     type: Date,

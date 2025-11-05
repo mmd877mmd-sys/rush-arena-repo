@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import ButtonLoading from "@/app/component/buttonLoading";
-import { appLink } from "@/config";
+
 import { showToast } from "@/app/component/application/tostify";
 import { Preferences } from "@capacitor/preferences";
 
@@ -60,7 +60,10 @@ export default function MatchJoinPage() {
 
     try {
       setLoading(true);
-      const res = await axios.post(`${appLink}/api/matches/join`, payload);
+      const res = await axios.post(
+        `${process.env.appLink}api/matches/join`,
+        payload
+      );
       if (res.data.success) {
         showToast("success", "Joined successfully!");
 

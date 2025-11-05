@@ -6,7 +6,7 @@ export const MatchType5 = "BR Squad 2V2/4V4";
 export const MatchType6 = "Free match";
 
 // pages link
-export const appLink = "https://rush-arena-repo.vercel.app/";
+export const appLink = "http://localhost:3000/";
 export const withdrawPage = "/wallet/withdraw";
 export const depositPage = "/wallet/diposit";
 export const transection = "/wallet/transection";
@@ -20,7 +20,7 @@ export const howtoaddtaka = "#";
 // support
 
 export const telegramlink = "https://t.me/yourtelegramlink";
-export const whatsapplink = "https://wa.me/88017XXXXXXXX";
+export const whatsappLink = "https://wa.me/88017XXXXXXXX";
 export const facebooklink = "https://facebook.com/";
 export const youtubelink = "https://facebook.com/";
 

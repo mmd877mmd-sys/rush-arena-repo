@@ -13,12 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { Preferences } from "@capacitor/preferences";
-import { web_home, web_login } from "@/routes/websiteRoute";
+import { web_login } from "@/routes/websiteRoute";
 import { signupSchema } from "@/lib/zodSchema";
 import Logo from "@/public/images/logo.jpg";
 
 import { showToast } from "@/app/component/application/tostify";
-import { appLink } from "@/config";
+
 import ButtonLoading from "@/app/component/buttonLoading";
 
 export default function SignupPage() {
@@ -42,7 +42,10 @@ export default function SignupPage() {
       setloading(true);
 
       // Send signup request
-      const res = await axios.post(`${appLink}/api/auth/signup`, data);
+      const res = await axios.post(
+        `${process.env.appLink}api/auth/signup`,
+        data
+      );
       const signupResponse = res.data;
 
       // Handle failure
@@ -62,7 +65,8 @@ export default function SignupPage() {
       showToast("success", signupResponse.message || "Signup successful");
 
       // Redirect user
-      // router.push(web_home); // replace with your dashboard/home path
+
+      window.location.href = process.env.appLink; // replace with your dashboard/home path
     } catch (error) {
       console.error("Signup error:", error);
       showToast(

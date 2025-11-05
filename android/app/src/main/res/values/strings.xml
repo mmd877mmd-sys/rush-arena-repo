@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">rush-arena</string>
     <string name="title_activity_main">rush-arena</string>
-    <string name="package_name">com.rusharena.app</string>
-    <string name="custom_url_scheme">com.rusharena.app</string>
+    <string name="package_name">com.rushAren.app</string>
+    <string name="custom_url_scheme">com.rushAren.app</string>
 </resources>

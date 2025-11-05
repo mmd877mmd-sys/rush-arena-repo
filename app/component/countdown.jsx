@@ -29,7 +29,7 @@ export default function Countdown({ targetDate }) {
           Start In -{days}d {hours}h {minutes}m {seconds}s
         </h2>
       ) : (
-        <h2> Match Fineshed !</h2>
+        <h2>Will Start Very Soon</h2>
       )}
     </div>
   );

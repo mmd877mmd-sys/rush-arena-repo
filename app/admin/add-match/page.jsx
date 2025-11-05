@@ -43,19 +43,27 @@ export default function TournamentForm() {
       entryFee: 10,
       entryType: "Solo",
       map: "Bermuda",
-      prizeDetails: true,
+      prizeDetails: false,
       joined: 0,
       totalSpots: 48,
+      firstPrize: 12,
+      secondPrize: 12,
+      thirdPrize: 12,
+      fourthPrize: 12,
+      fifthPrize: 12,
     },
   });
 
   const onSubmit = async (data) => {
+    console.log("Form Data:", data);
     try {
-      const res = await axios.post("/api/addMatch", { data });
-      if (!res) {
-        showToast("error", res.message);
+      const res = await axios.post("/api/addMatch", data);
+      if (res?.data?.success) {
+        showToast("success", "Added successfully");
+        form.reset();
+      } else {
+        showToast("error", res?.data?.message || "Something went wrong");
       }
-      showToast("success", "Added successfully");
     } catch (err) {
       showToast("error", err.message);
     }
@@ -76,7 +84,7 @@ export default function TournamentForm() {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Enter tournament title" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -94,16 +102,22 @@ export default function TournamentForm() {
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select Match" />
+                    <SelectValue placeholder="Select Match Type" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value={MatchType1}>{MatchType1}</SelectItem>
-                  <SelectItem value={MatchType2}>{MatchType2}</SelectItem>
-                  <SelectItem value={MatchType3}>{MatchType3}</SelectItem>
-                  <SelectItem value={MatchType4}>{MatchType4}</SelectItem>
-                  <SelectItem value={MatchType5}>{MatchType5}</SelectItem>
-                  <SelectItem value={MatchType6}>{MatchType6}</SelectItem>
+                  {[
+                    MatchType1,
+                    MatchType2,
+                    MatchType3,
+                    MatchType4,
+                    MatchType5,
+                    MatchType6,
+                  ].map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -131,6 +145,7 @@ export default function TournamentForm() {
           )}
         />
 
+        {/* Win Prize & Prize Details */}
         <div className="flex gap-3">
           <div className="flex-1">
             <FormField
@@ -159,30 +174,34 @@ export default function TournamentForm() {
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
-                        field.onChange(value === "true");
-                        setPrizeDetails(value === "true");
+                        const boolValue = value === "true";
+                        field.onChange(boolValue);
+                        setPrizeDetails(boolValue);
                       }}
                       value={field.value ? "true" : "false"}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select one" />
+                        <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={true}>Yes</SelectItem>
-                        <SelectItem value={false}>No</SelectItem>
+                        <SelectItem value="true">Yes</SelectItem>
+                        <SelectItem value="false">No</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
           </div>
         </div>
 
-        {/* Prize Fields (visible only when prizeDetails = true) */}
-        {prizeDetails && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 border bg-black/5 p-3 rounded">
+        {/* Conditional Prize Inputs */}
+        {prizeDetails !== false && (
+          <div
+            className={`${
+              prizeDetails == false && "hidden"
+            } grid grid-cols-2 md:grid-cols-3 gap-3 border bg-black/5 p-3 rounded`}
+          >
             {[
               "firstPrize",
               "secondPrize",
@@ -249,7 +268,6 @@ export default function TournamentForm() {
 
         {/* Entry Type & Map */}
         <div className="flex gap-3">
-          {/* Entry Type */}
           <div className="flex-1">
             <FormField
               control={form.control}
@@ -261,7 +279,7 @@ export default function TournamentForm() {
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select entry type" />
+                        <SelectValue placeholder="Select Type" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Solo">Solo</SelectItem>
@@ -275,7 +293,6 @@ export default function TournamentForm() {
             />
           </div>
 
-          {/* Map */}
           <div className="flex-1">
             <FormField
               control={form.control}
@@ -283,7 +300,7 @@ export default function TournamentForm() {
               rules={{ required: "Map is required" }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Map Name</FormLabel>
+                  <FormLabel>Map</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
@@ -316,6 +333,7 @@ export default function TournamentForm() {
               <FormControl>
                 <Input {...field} type="number" />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

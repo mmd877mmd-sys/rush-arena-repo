@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Preferences } from "@capacitor/preferences";
-import { appLink } from "@/config";
 
 export default function TransactionHistoryPage() {
   const [transactions, setTransactions] = useState([]);
@@ -40,7 +39,7 @@ export default function TransactionHistoryPage() {
         }
 
         const res = await fetch(
-          `${appLink}/api/wallets/transections?userId=${userId}`
+          `${process.env.appLink}api/wallets/transections?userId=${userId}`
         );
         const data = await res.json();
 

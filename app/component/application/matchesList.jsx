@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Countdown from "@/app/component/countdown";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  appLink,
+  process.env.appLink,
   MatchType1,
   MatchType2,
   MatchType3,
@@ -16,6 +16,7 @@ import {
 } from "@/config";
 import PrizePopup from "./prizePopup";
 import { Preferences } from "@capacitor/preferences";
+import { showToast } from "./tostify";
 
 // ✅ helper to get image based on type
 const getMatchImage = (matchType) => {
@@ -45,10 +46,10 @@ const PlayMatch = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [popUpType, setPopUpType] = useState(false);
-  const [matchId, setMatchId] = useState(false);
+  const [popUpType, setPopUpType] = useState(null);
+  const [matchId, setMatchId] = useState(null);
 
-  // ✅ format time properly
+  // ✅ Format time properly
   const formatDate = (date) => {
     return new Date(date).toLocaleString("en-US", {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -62,41 +63,36 @@ const PlayMatch = () => {
     });
   };
 
-  // ✅ fetch matches and user's joined matches
+  // ✅ Fetch matches and user's joined matches
   useEffect(() => {
     if (!matchType) return;
 
     const fetchMatches = async () => {
       setLoading(true);
       setError(null);
-
       try {
         const res = await fetch(
-          `${appLink}/api/matches?type=${encodeURIComponent(matchType)}`
+          `${process.env.appLink}api/matches?type=${encodeURIComponent(matchType)}`
         );
-
         if (!res.ok) throw new Error("No matches found!");
 
         const data = await res.json();
         const allMatches = data?.data || [];
 
-        // filter only the current match type
-        const filtered = allMatches.filter((m) => m.matchType === matchType);
+        // filter and sort
+        const filtered = allMatches
+          .filter((m) => m.matchType === matchType)
+          .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
 
-        // sort ascending by start time
-        filtered.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
-
-        // ✅ Get authId properly
         const { value: authId } = await Preferences.get({
           key: "access_token",
         });
 
         if (!authId) {
-          setJoinedMatch([]); // user not logged in
+          setJoinedMatch([]);
         } else {
-          // ✅ Filter matches where joinedPlayers contains an object with matching authId
           const joined = filtered.filter((match) =>
-            match.joinedPlayers.some((player) => player.authId === authId)
+            match.joinedPlayers.some((p) => p.authId === authId)
           );
           setJoinedMatch(joined);
         }
@@ -113,18 +109,24 @@ const PlayMatch = () => {
     fetchMatches();
   }, [matchType]);
 
-  // ✅ handle clicking card to open details
-  const handleCardClick = (matchId) => {
-    router.push(`${appLink}/play-match/details?matchId=${matchId}`);
+  // ✅ Handle navigation
+  const handleCardClick = (id) => {
+    router.push(`${process.env.appLink}play-match/details?matchId=${id}`);
   };
-  // ✅ handle room details button
-  const handlepopup = (matchId, type) => {
+
+  // ✅ Handle popup
+  const handlePopup = (id, type) => {
     setShowPopup(true);
-    setMatchId(matchId);
+    setMatchId(id);
     setPopUpType(type);
   };
 
-  // ✅ loading UI
+  // ✅ Derived matches (not joined)
+  const availableMatches = useMemo(() => {
+    return matches.filter((m) => !joinedMatch.some((jm) => jm._id === m._id));
+  }, [matches, joinedMatch]);
+
+  // ✅ Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -133,7 +135,7 @@ const PlayMatch = () => {
     );
   }
 
-  // ✅ error or invalid type
+  // ✅ Error or invalid type
   if (error || !matchType) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-black text-white p-4">
@@ -144,7 +146,7 @@ const PlayMatch = () => {
     );
   }
 
-  // ✅ no matches found
+  // ✅ No matches
   if (!matches.length) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-800 text-white p-4">
@@ -165,6 +167,7 @@ const PlayMatch = () => {
         {matchType}
       </h1>
 
+      {/* ✅ Joined Matches */}
       {joinedMatch.map((match) => (
         <Card
           key={match._id}
@@ -173,7 +176,7 @@ const PlayMatch = () => {
         >
           <CardHeader>
             <div className="flex gap-4 justify-start">
-              <div className="w-16 h-16 rounded-full overflow-hidden relative">
+              <div className="w-16 h-16 min-w-16 rounded-full overflow-hidden relative">
                 <Image
                   src={getMatchImage(match.matchType)}
                   alt={match.title}
@@ -191,6 +194,7 @@ const PlayMatch = () => {
           </CardHeader>
 
           <CardContent className="space-y-3">
+            {/* ✅ Prize Details */}
             <div className="flex justify-around">
               <div className="text-green-500 font-bold flex flex-col items-center">
                 <strong>+ WIN PRIZE</strong>
@@ -206,6 +210,7 @@ const PlayMatch = () => {
               </div>
             </div>
 
+            {/* ✅ Match Info */}
             <div className="flex justify-between text-gray-300 mt-2">
               <div className="flex flex-col items-center w-full">
                 <strong>ENTRY TYPE</strong>
@@ -221,6 +226,7 @@ const PlayMatch = () => {
               </div>
             </div>
 
+            {/* ✅ Joined UI */}
             <div className="flex justify-between items-center my-4 gap-3">
               <div className="w-2/3">
                 <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
@@ -242,16 +248,23 @@ const PlayMatch = () => {
                 </p>
               </div>
 
-              <Button disabled className="w-1/3 bg-blue-600 hover:bg-blue-700">
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  showToast("success", "Already Joined!");
+                }}
+                className="w-1/3 bg-blue-900 hover:bg-blue-800"
+              >
                 Joined
               </Button>
             </div>
 
+            {/* ✅ Buttons */}
             <div className="flex justify-between mt-2">
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handlepopup(match._id, "room");
+                  handlePopup(match._id, "room");
                 }}
                 variant="outline"
                 className="border-gray-600 text-black"
@@ -261,7 +274,7 @@ const PlayMatch = () => {
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handlepopup(match._id, "prize");
+                  handlePopup(match._id, "prize");
                 }}
                 variant="outline"
                 className="border-gray-600 text-black"
@@ -282,12 +295,13 @@ const PlayMatch = () => {
         </Card>
       ))}
 
-      {/* ✅ All Matches Section */}
-      {matches.map((match) => {
-        // skip already joined matches
-        if (joinedMatch.some((jm) => jm._id === match._id)) return null;
-
+      {/* ✅ Available Matches */}
+      {availableMatches.map((match) => {
         const isFull = match.joinedPlayers.length >= match.totalSpots;
+        const isOver =
+          new Date(match.startTime).getTime() <= new Date().getTime();
+        const buttonText = isFull ? "Full" : isOver ? "Started" : "Join Now";
+        const isDisabled = isFull || isOver;
 
         return (
           <Card
@@ -297,7 +311,7 @@ const PlayMatch = () => {
           >
             <CardHeader>
               <div className="flex gap-4 justify-start">
-                <div className="w-16 h-16 rounded-full overflow-hidden relative">
+                <div className="w-16 h-16 min-w-16 rounded-full overflow-hidden relative">
                   <Image
                     src={getMatchImage(match.matchType)}
                     alt={match.title}
@@ -315,6 +329,7 @@ const PlayMatch = () => {
             </CardHeader>
 
             <CardContent className="space-y-3">
+              {/* ✅ Prize Info */}
               <div className="flex justify-around">
                 <div className="text-green-500 font-bold flex flex-col items-center">
                   <strong>+ WIN PRIZE</strong>
@@ -370,13 +385,17 @@ const PlayMatch = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     router.push(
-                      `${appLink}/play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
+                      `${process.env.appLink}play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
                     );
                   }}
-                  disabled={isFull}
-                  className="w-1/3 bg-blue-600 hover:bg-blue-700"
+                  disabled={isDisabled}
+                  className={`w-1/3 ${
+                    isDisabled
+                      ? "bg-gray-500 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700"
+                  }`}
                 >
-                  {isFull ? "Room Full" : "Join Now"}
+                  {buttonText}
                 </Button>
               </div>
 
@@ -384,7 +403,7 @@ const PlayMatch = () => {
                 <Button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handlepopup(match._id, "room");
+                    handlePopup(match._id, "room");
                   }}
                   variant="outline"
                   className="border-gray-600 text-black"
@@ -394,7 +413,7 @@ const PlayMatch = () => {
                 <Button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handlepopup(match._id, "prize");
+                    handlePopup(match._id, "prize");
                   }}
                   variant="outline"
                   className="border-gray-600 text-black"
@@ -416,6 +435,7 @@ const PlayMatch = () => {
         );
       })}
 
+      {/* ✅ Popup */}
       {showPopup && (
         <PrizePopup
           matchId={matchId}

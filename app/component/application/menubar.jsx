@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { Preferences } from "@capacitor/preferences";
-import { appLink } from "@/config";
+
 import { showToast } from "./tostify";
 
 export default function Navbar() {
@@ -21,7 +21,9 @@ export default function Navbar() {
         }
 
         const res = await fetch(
-          `${appLink}/api/getuser?authId=${encodeURIComponent(value)}`
+          `${process.env.appLink}api/getuser?authId=${encodeURIComponent(
+            value
+          )}`
         );
 
         const data = await res.json();

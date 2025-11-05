@@ -29,13 +29,15 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <BackButtonHandler />
+        <div className="w-full m-auto md:w-2/3 lg:w-1/3 ">
+          <BackButtonHandler />
 
-        <InternetChecker>
-          <ProtectedRoute>{children}</ProtectedRoute>
-        </InternetChecker>
+          <InternetChecker>
+            <ProtectedRoute>{children}</ProtectedRoute>
+          </InternetChecker>
 
-        <ToastContainer />
+          <ToastContainer />
+        </div>
       </body>
     </html>
   );

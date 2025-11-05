@@ -12,7 +12,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 import { Preferences } from "@capacitor/preferences";
-import { appLink } from "@/config";
 
 export default function CashBalanceCard() {
   const [BalanceAmount, setbalance] = useState(0);
@@ -30,7 +29,9 @@ export default function CashBalanceCard() {
         }
 
         const res = await fetch(
-          `${appLink}/api/getuser?authId=${encodeURIComponent(value)}`
+          `${process.env.appLink}api/getuser?authId=${encodeURIComponent(
+            value
+          )}`
         );
 
         const data = await res.json();

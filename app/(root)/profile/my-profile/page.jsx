@@ -9,7 +9,7 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import ButtonLoading from "@/app/component/buttonLoading";
 import { showToast } from "@/app/component/application/tostify";
-import { appLink } from "@/config";
+
 import { passwordSchema } from "@/lib/zodSchema";
 
 import { Eye, EyeOff } from "lucide-react";
@@ -45,7 +45,9 @@ export default function ProfilePage() {
         setAuthId(value);
 
         const res = await fetch(
-          `${appLink}/api/getuser?authId=${encodeURIComponent(value)}`
+          `${process.env.appLink}api/getuser?authId=${encodeURIComponent(
+            value
+          )}`
         );
 
         if (!res.ok) {
@@ -71,7 +73,10 @@ export default function ProfilePage() {
     try {
       setLoading(true);
       data.authId = loggedAuth._id;
-      const res = await axios.post(`${appLink}/api/auth/changePassword`, data);
+      const res = await axios.post(
+        `${process.env.appLink}api/auth/changePassword`,
+        data
+      );
       const response = res.data;
 
       if (!response.success) {

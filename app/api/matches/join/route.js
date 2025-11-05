@@ -32,10 +32,11 @@ export async function POST(req) {
       return response(false, 404, "User not found");
     }
 
-    const entryFee = match.entryFee;
-    let remainingFee = entryFee;
+    // ✅ Calculate total entry fee = entryFee × number of players
+    const totalEntryFee = match.entryFee * players.length;
+    let remainingFee = totalEntryFee;
 
-    // Deduct from deposit balance first
+    // ✅ Deduct from deposit balance first
     if (user.dipositbalance >= remainingFee) {
       user.dipositbalance -= remainingFee;
       remainingFee = 0;
@@ -44,7 +45,7 @@ export async function POST(req) {
       user.dipositbalance = 0;
     }
 
-    // If deposit not enough, deduct rest from win balance
+    // ✅ If deposit not enough, deduct rest from win balance
     if (remainingFee > 0) {
       if (user.winbalance >= remainingFee) {
         user.winbalance -= remainingFee;
@@ -56,23 +57,24 @@ export async function POST(req) {
 
     await user.save();
 
-    // Convert players array to objects with same authId
+    // ✅ Convert players array to objects with same authId
     const playerObjects = players.map((name) => ({
       name,
       authId,
+      userName: user.name,
     }));
 
-    // Push all player objects into joinedPlayers
+    // ✅ Push all player objects into joinedPlayers
     match.joinedPlayers.push(...playerObjects);
     await match.save();
 
     return NextResponse.json({
       success: true,
-      message: "Players joined successfully and entry fee deducted",
+      message: `Players joined successfully. Entry fee (${match.entryFee} × ${players.length} = ${totalEntryFee}) deducted.`,
       data: {
         match,
         remainingDeposit: user.dipositbalance,
-        remainingwinbalance: user.winbalance,
+        remainingWinbalance: user.winbalance,
       },
     });
   } catch (error) {

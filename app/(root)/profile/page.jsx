@@ -12,7 +12,7 @@ import {
   ClipboardList,
   Share2,
 } from "lucide-react";
-import { appLink, depositPage, transection, withdrawPage } from "@/config";
+import { depositPage, transection, withdrawPage } from "@/config";
 import ButtonLoading from "@/app/component/buttonLoading";
 import { useState } from "react";
 import { Preferences } from "@capacitor/preferences";
@@ -33,7 +33,7 @@ export default function ProfileSidebar() {
         "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
       showToast("success", "Logged out successfully!");
-      window.location.href = `${appLink}/`;
+      window.location.href = `${process.env.appLink}`;
     } catch (error) {
       console.error("Error during logout:", error);
       showToast("error", "Failed to logout. Please try again.");

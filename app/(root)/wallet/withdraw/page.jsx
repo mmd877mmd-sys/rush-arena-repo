@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { appLink } from "@/config";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -52,12 +51,15 @@ export default function WithdrawPage() {
       }
 
       setLoading(true);
-      const res = await axios.post(`${appLink}/api/wallets/withdraw`, {
-        method,
-        userId,
-        receiverPhone: data.receiverPhone,
-        amount: data.amount,
-      });
+      const res = await axios.post(
+        `${process.env.appLink}api/wallets/withdraw`,
+        {
+          method,
+          userId,
+          receiverPhone: data.receiverPhone,
+          amount: data.amount,
+        }
+      );
 
       if (res.data.success) {
         reset();

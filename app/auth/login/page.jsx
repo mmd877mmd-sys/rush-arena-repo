@@ -17,10 +17,8 @@ import Logo from "@/public/images/logo.jpg";
 import { useRouter } from "next/navigation";
 
 import { Preferences } from "@capacitor/preferences";
-import { appLink } from "@/config";
 import ButtonLoading from "@/app/component/buttonLoading";
 import { showToast } from "@/app/component/application/tostify";
-import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -60,7 +58,7 @@ export default function LoginPage() {
       showToast("success", loginResponse.message || "Login successful");
 
       // Redirect user
-      window.location.href = appLink; // or use router.push(appLink)
+      window.location.href = process.env.appLink; // or use router.push(process.env.appLink)
     } catch (error) {
       console.error("Login error:", error);
       showToast(

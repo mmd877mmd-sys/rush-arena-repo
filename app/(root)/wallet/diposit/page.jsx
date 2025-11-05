@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { showToast } from "@/app/component/application/tostify";
 import { Preferences } from "@capacitor/preferences";
-import { appLink, paymentNumber } from "@/config";
+
 import ButtonLoading from "@/app/component/buttonLoading";
 
 // Zod Schema
@@ -54,11 +54,14 @@ export default function DepositPage() {
 
       setLoading(true);
 
-      const res = await axios.post(`${appLink}/api/wallets/diposit`, {
-        ...data,
-        method,
-        userId,
-      });
+      const res = await axios.post(
+        `${process.env.appLink}api/wallets/diposit`,
+        {
+          ...data,
+          method,
+          userId,
+        }
+      );
 
       if (res.data.success) {
         showToast("success", "Deposit request sent successfully!");

@@ -1,4 +1,4 @@
-package com.rusharena.app;
+package com.rushAren.app;
 
 import com.getcapacitor.BridgeActivity;
 
