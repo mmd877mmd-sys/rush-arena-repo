@@ -7,7 +7,6 @@ import Image from "next/image";
 import Countdown from "@/app/component/countdown";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  process.env.appLink,
   MatchType1,
   MatchType2,
   MatchType3,
@@ -72,7 +71,9 @@ const PlayMatch = () => {
       setError(null);
       try {
         const res = await fetch(
-          `${process.env.appLink}api/matches?type=${encodeURIComponent(matchType)}`
+          `${process.env.appLink}api/matches?type=${encodeURIComponent(
+            matchType
+          )}`
         );
         if (!res.ok) throw new Error("No matches found!");
 
