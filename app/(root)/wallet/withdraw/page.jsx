@@ -72,7 +72,6 @@ export default function WithdrawPage() {
       showToast("error", "Failed to process withdrawal request!");
     } finally {
       setLoading(false);
-      setTimeout(() => setSuccess(false), 3000);
     }
   };
 
@@ -142,6 +141,7 @@ export default function WithdrawPage() {
           <ButtonLoading
             type="submit"
             loading={loading}
+            disabled={isSubmitDisabled}
             text={loading ? "Processing..." : "Withdraw"}
             className="w-full py-3 rounded-lg font-medium  bg-gray-600 hover:bg-gray-700 disabled:opacity-50 transition"
           />

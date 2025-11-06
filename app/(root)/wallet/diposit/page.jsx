@@ -21,7 +21,7 @@ export default function DepositPage() {
   const [method, setMethod] = useState("Bkash");
   const [loading, setLoading] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [success, setSuccess] = useState(false);
+
   const paymentNumber = "019XXXXXXXXX";
   const paymentOptions = [
     { name: "Bkash", img: "/images/assets/bkash.jpg" },
@@ -55,7 +55,7 @@ export default function DepositPage() {
       setLoading(true);
 
       const res = await axios.post(
-        `${NEXT_PUBLIC_WEB_URL}api/wallets/diposit`,
+        `${process.env.NEXT_PUBLIC_WEB_URL}api/wallets/diposit`,
         {
           ...data,
           method,
@@ -65,7 +65,7 @@ export default function DepositPage() {
 
       if (res.data.success) {
         showToast("success", "Deposit request sent successfully!");
-        setSuccess(true);
+
         reset();
       } else {
         showToast("error", res.data.message || "Something went wrong!");
@@ -75,7 +75,6 @@ export default function DepositPage() {
       showToast("error", "Failed to process deposit request!");
     } finally {
       setLoading(false);
-      setTimeout(() => setSuccess(false), 3000);
     }
   };
 
@@ -93,13 +92,6 @@ export default function DepositPage() {
     <div className="min-h-screen bg-gray-950 flex justify-center items-start p-4 pt-12">
       <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full mb-6 max-w-md p-6 space-y-6">
         <h2 className="text-lg font-bold text-center">Deposit</h2>
-
-        {/* Success Alert */}
-        {success && (
-          <div className="p-3 rounded-lg bg-green-600 text-center text-white font-medium">
-            Deposit request sent successfully!
-          </div>
-        )}
 
         {/* Admin Deposit Info */}
         <div className="bg-gray-800 p-4 rounded-lg flex justify-center items-center">
