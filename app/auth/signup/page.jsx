@@ -63,7 +63,7 @@ export default function SignupPage() {
 
       // Redirect user
 
-      window.location.href = process.env.appLink; // replace with your dashboard/home path
+      window.location.href = process.env.appLink;
     } catch (error) {
       console.error("Signup error:", error);
       showToast(
