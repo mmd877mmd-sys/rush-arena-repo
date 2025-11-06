@@ -21,9 +21,9 @@ export default function Navbar() {
         }
 
         const res = await fetch(
-          `${NEXT_PUBLIC_WEB_URL}api/getuser?authId=${encodeURIComponent(
-            value
-          )}`
+          `${
+            process.env.NEXT_PUBLIC_WEB_URL
+          }api/getuser?authId=${encodeURIComponent(value)}`
         );
 
         const data = await res.json();
@@ -59,7 +59,7 @@ export default function Navbar() {
             alt="wallet"
             width={56}
             height={56}
-            className="rounded w-[56px] h-[56px] object-cover"
+            className="rounded  object-cover"
           />
           <span className="font-medium text-white">
             ৳ {isNaN(Number(BalanceAmount)) ? 0 : Number(BalanceAmount)}
