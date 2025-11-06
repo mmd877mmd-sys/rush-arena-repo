@@ -6,7 +6,6 @@ export const MatchType5 = "BR Squad 2V2/4V4";
 export const MatchType6 = "Free match";
 
 // pages link
-export const appLink = "http://localhost:3000/";
 export const withdrawPage = "/wallet/withdraw";
 export const depositPage = "/wallet/diposit";
 export const transection = "/wallet/transection";
