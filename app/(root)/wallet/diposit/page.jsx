@@ -22,7 +22,7 @@ export default function DepositPage() {
   const [loading, setLoading] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  const paymentNumber = "019XXXXXXXXX";
   const paymentOptions = [
     { name: "Bkash", img: "/images/assets/bkash.jpg" },
     { name: "Nagad", img: "/images/assets/nagad.jpg" },
@@ -55,7 +55,7 @@ export default function DepositPage() {
       setLoading(true);
 
       const res = await axios.post(
-        `${process.env.appLink}api/wallets/diposit`,
+        `${NEXT_PUBLIC_WEB_URL}api/wallets/diposit`,
         {
           ...data,
           method,

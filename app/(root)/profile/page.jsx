@@ -33,7 +33,7 @@ export default function ProfileSidebar() {
         "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
       showToast("success", "Logged out successfully!");
-      window.location.href = `${process.env.appLink}`;
+      window.location.href = `${process.env.NEXT_PUBLIC_WEB_URL}`;
     } catch (error) {
       console.error("Error during logout:", error);
       showToast("error", "Failed to logout. Please try again.");

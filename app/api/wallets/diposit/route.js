@@ -20,8 +20,6 @@ export async function POST(req) {
     const body = await req.json();
     const { method, userId, trxId, phone } = body;
 
-    console.log(body);
-
     // Validate input
     depositSchema.safeParse({ method, userId, trxId });
 

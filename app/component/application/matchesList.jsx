@@ -71,9 +71,9 @@ const PlayMatch = () => {
       setError(null);
       try {
         const res = await fetch(
-          `${process.env.appLink}api/matches?type=${encodeURIComponent(
-            matchType
-          )}`
+          `${
+            process.env.NEXT_PUBLIC_WEB_URL
+          }api/matches?type=${encodeURIComponent(matchType)}`
         );
         if (!res.ok) throw new Error("No matches found!");
 
@@ -112,7 +112,9 @@ const PlayMatch = () => {
 
   // ✅ Handle navigation
   const handleCardClick = (id) => {
-    router.push(`${process.env.appLink}play-match/details?matchId=${id}`);
+    router.push(
+      `${process.env.NEXT_PUBLIC_WEB_URL}play-match/details?matchId=${id}`
+    );
   };
 
   // ✅ Handle popup
@@ -386,7 +388,7 @@ const PlayMatch = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     router.push(
-                      `${process.env.appLink}play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
+                      `${process.env.NEXT_PUBLIC_WEB_URL}play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
                     );
                   }}
                   disabled={isDisabled}

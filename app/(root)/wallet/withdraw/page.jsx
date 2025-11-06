@@ -52,7 +52,7 @@ export default function WithdrawPage() {
 
       setLoading(true);
       const res = await axios.post(
-        `${process.env.appLink}api/wallets/withdraw`,
+        `${process.env.NEXT_PUBLIC_WEB_URL}api/wallets/withdraw`,
         {
           method,
           userId,

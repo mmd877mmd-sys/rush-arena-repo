@@ -7,7 +7,7 @@ export default function SharePage() {
   const [copied, setCopied] = useState(false);
   const [shareSuccess, setShareSuccess] = useState(false);
 
-  const valueToCopy = process.env.appLink;
+  const valueToCopy = process.env.NEXT_PUBLIC_WEB_URL;
 
   const handleShare = async () => {
     try {
