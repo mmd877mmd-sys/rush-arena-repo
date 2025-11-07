@@ -42,9 +42,9 @@ export default function TransactionHistoryPage() {
           type: type,
         },
       });
-      const data = await res.json();
+      const data = await res.data;
 
-      if (!res.ok || !data.success) {
+      if (!res || !data.success) {
         showToast("error", data.message || "Failed to fetch transactions");
       }
 

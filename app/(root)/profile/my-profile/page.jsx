@@ -48,13 +48,12 @@ export default function ProfilePage() {
           params: { authId: value }, // Axios handles encoding automatically
         });
 
-        if (!res.ok) {
-          const errorData = await res.json().catch(() => ({}));
-          showToast("error", errorData.message || "Failed to fetch user.");
+        if (!res) {
+          showToast("error", res.message || "Failed to fetch user.");
           return;
         }
 
-        const data = await res.json();
+        const data = await res.data;
         setLoggedAuth(data.data);
       } catch (error) {
         console.error("Error loading user data:", error);

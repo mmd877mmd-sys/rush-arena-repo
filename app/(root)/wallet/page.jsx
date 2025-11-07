@@ -32,7 +32,7 @@ export default function CashBalanceCard() {
         const res = await axios.get(`/api/getuser`, {
           params: { authId: value }, // Axios automatically encodes this
         });
-        const data = await res.json();
+        const data = await res.data;
         await setbalance(data.data.dipositbalance + data.data.winbalance);
         await setdipobalance(data.data.dipositbalance);
         await setwinbalance(data.data.winbalance);

@@ -21,7 +21,7 @@ export async function GET(request) {
     }
 
     return new Response(
-      JSON.stringify({ message: "Success", data: authUser }),
+      JSON.stringify({ success: true, message: "Success", data: authUser }),
       {
         status: 200,
         headers: { "Content-Type": "application/json" },
