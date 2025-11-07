@@ -36,10 +36,12 @@ export default function TransactionHistoryPage() {
         setLoading(false);
         return;
       }
-
-      const res = await fetch(
-        ` /api/wallets/transections?userId=${userId}&type=${type}`
-      );
+      const res = await axios.get("/api/your-endpoint", {
+        params: {
+          userId: userId,
+          type: type,
+        },
+      });
       const data = await res.json();
 
       if (!res.ok || !data.success) {

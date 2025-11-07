@@ -39,7 +39,7 @@ export default function LoginPage() {
       setLoading(true);
 
       // Send login request
-      const res = await axios.post(` /api/auth/login`, formData);
+      const res = await axios.post(`/api/auth/login`, formData);
       const loginResponse = res.data;
 
       if (!loginResponse.success) {

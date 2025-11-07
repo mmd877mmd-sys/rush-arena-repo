@@ -76,8 +76,8 @@ const PlayMatch = () => {
       setError(null);
 
       try {
-        const res = await axios.get(` /api/matches`, {
-          params: { type: matchType },
+        const res = await axios.get(`/api/matches`, {
+          p 
         });
 
         const data = res.data;
@@ -122,7 +122,7 @@ const PlayMatch = () => {
   };
 
   // ✅ Handle popup
-  const handlePopup = (id, type) => {
+  const 
     setShowPopup(true);
     setMatchId(id);
     setPopUpType(type);
@@ -415,7 +415,7 @@ const PlayMatch = () => {
                   }}
                   disabled={isDisabled}
                   className={`w-1/3 ${
-                    isDisabled
+                    isD 
                       ? "bg-gray-500 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700"
                   }`}

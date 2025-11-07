@@ -20,7 +20,7 @@ export default function MatchDetails() {
       setLoading(true);
       try {
         const res = await axios.get(` /api/matches/details`, {
-          params: { matchId },
+          p,
         });
 
         const data = res.data?.data;

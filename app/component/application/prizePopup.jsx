@@ -20,8 +20,8 @@ export default function PrizePopup({ matchId, popUpType, onClose, isJoined }) {
       const { value } = await Preferences.get({ key: "access_token" });
 
       try {
-        const res = await axios.get(` /api/matches/details`, {
-          params: { matchId: matchId, matchAuth: value },
+        const res = await axios.get(`/api/matches/details`, {
+          p th: value },
         });
 
         setMatchData(res.data?.data);

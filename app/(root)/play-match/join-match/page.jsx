@@ -60,8 +60,8 @@ export default function MatchJoinPage() {
 
     try {
       setLoading(true);
-      const res = await axios.post(` /api/matches/join`, payload);
-      if (res.data.success) {
+      const res = await axios.post(`/api/matches/join`, payload);
+      if  
         showToast("success", "Joined successfully!");
 
         reset();

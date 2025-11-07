@@ -44,10 +44,11 @@ export default function ProfilePage() {
         }
         setAuthId(value);
 
-        const res = await fetch(
-          `${
-            process.env.NEXT_PUBLIC_WEB_URL
-          }/api/getuser?authId=${encodeURIComponent(value)}`
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_WEB_URL}/api/getuser`,
+          {
+            params: { authId: value }, // Axios handles encoding automatically
+          }
         );
 
         if (!res.ok) {
@@ -73,8 +74,8 @@ export default function ProfilePage() {
     try {
       setLoading(true);
       data.authId = loggedAuth._id;
-      const res = await axios.post(` /api/auth/changePassword`, data);
-      const response = res.data;
+      const res = await axios.post(`/api/auth/changePassword`, data);
+      con;
 
       if (!response.success) {
         showToast("error", response.message || "Update failed");

@@ -7,6 +7,7 @@ import { Preferences } from "@capacitor/preferences";
 
 import { showToast } from "./tostify";
 import { RotateCcw } from "lucide-react";
+import axios from "axios";
 
 export default function Navbar() {
   const [BalanceAmount, setbalance] = useState(0);
@@ -22,10 +23,13 @@ export default function Navbar() {
           return;
         }
 
-        const res = await fetch(
-          ` ${
-            process.env.NEXT_PUBLIC_WEB_URL
-          }/api/getuser?authId=${encodeURIComponent(value)}`
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_WEB_URL}/api/getuser`,
+          {
+            params: {
+              authId: value, // automatically encoded
+            },
+          }
         );
 
         const data = await res.json();

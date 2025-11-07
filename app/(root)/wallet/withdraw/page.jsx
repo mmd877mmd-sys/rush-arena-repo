@@ -51,8 +51,8 @@ export default function WithdrawPage() {
       }
 
       setLoading(true);
-      const res = await axios.post(` /api/wallets/withdraw`, {
-        method,
+      const res = await axios.post(`/api/wallets/withdraw`, {
+        m 
         userId,
         receiverPhone: data.receiverPhone,
         amount: data.amount,
