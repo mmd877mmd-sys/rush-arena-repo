@@ -28,7 +28,7 @@ export default function DepositPage() {
     (async () => {
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEB_URL}api/wallets/diposit/getNumber`
+          `${process.env.NEXT_PUBLIC_WEB_URL}/api/wallets/diposit/getNumber`
         );
         if (data.success) {
           setNumbers({ Bkash: data.data.Bkash, Nagad: data.data.Nagad });
@@ -63,7 +63,7 @@ export default function DepositPage() {
       setLoading(true);
 
       const { data: res } = await axios.post(
-        `${process.env.NEXT_PUBLIC_WEB_URL}api/wallets/diposit`,
+        `${process.env.NEXT_PUBLIC_WEB_URL}/api/wallets/diposit`,
         { ...data, method, userId }
       );
 

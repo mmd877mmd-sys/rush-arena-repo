@@ -23,7 +23,9 @@ export default function Navbar() {
         }
 
         const res = await fetch(
-          `/api/getuser?authId=${encodeURIComponent(value)}`
+          ` ${
+            process.env.NEXT_PUBLIC_WEB_URL
+          }/api/getuser?authId=${encodeURIComponent(value)}`
         );
 
         const data = await res.json();

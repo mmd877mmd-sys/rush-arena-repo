@@ -31,7 +31,7 @@ export default function CashBalanceCard() {
         const res = await fetch(
           `${
             process.env.NEXT_PUBLIC_WEB_URL
-          }api/getuser?authId=${encodeURIComponent(value)}`
+          }/api/getuser?authId=${encodeURIComponent(value)}`
         );
 
         const data = await res.json();

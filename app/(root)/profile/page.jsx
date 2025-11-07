@@ -28,7 +28,9 @@ export default function ProfileSidebar() {
       try {
         const { value } = await Preferences.get({ key: "access_token" });
 
-        const { data } = await axios.get(`/api/mymatch/?authId=${value}`);
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_WEB_URL}/api/mymatch/?authId=${value}`
+        );
         if (data.success) {
           setTotals(data.data);
         }

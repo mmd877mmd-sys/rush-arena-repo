@@ -21,7 +21,7 @@ export default function PrizePopup({ matchId, popUpType, onClose, isJoined }) {
 
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEB_URL}api/matches/details`,
+          `${process.env.NEXT_PUBLIC_WEB_URL}/api/matches/details`,
           {
             params: { matchId: matchId, matchAuth: value },
           }

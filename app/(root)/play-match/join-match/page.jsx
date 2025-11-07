@@ -61,7 +61,7 @@ export default function MatchJoinPage() {
     try {
       setLoading(true);
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_WEB_URL}api/matches/join`,
+        `${process.env.NEXT_PUBLIC_WEB_URL}/api/matches/join`,
         payload
       );
       if (res.data.success) {

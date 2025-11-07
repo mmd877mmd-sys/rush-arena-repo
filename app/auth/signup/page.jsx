@@ -42,7 +42,10 @@ export default function SignupPage() {
       setloading(true);
 
       // Send signup request
-      const res = await axios.post(`/api/auth/signup`, data);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_WEB_URL}/api/auth/signup`,
+        data
+      );
       const signupResponse = res.data;
 
       // Handle failure

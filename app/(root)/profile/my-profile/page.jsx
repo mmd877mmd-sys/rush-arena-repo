@@ -47,7 +47,7 @@ export default function ProfilePage() {
         const res = await fetch(
           `${
             process.env.NEXT_PUBLIC_WEB_URL
-          }api/getuser?authId=${encodeURIComponent(value)}`
+          }/api/getuser?authId=${encodeURIComponent(value)}`
         );
 
         if (!res.ok) {
@@ -74,7 +74,7 @@ export default function ProfilePage() {
       setLoading(true);
       data.authId = loggedAuth._id;
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_WEB_URL}api/auth/changePassword`,
+        `${process.env.NEXT_PUBLIC_WEB_URL}/api/auth/changePassword`,
         data
       );
       const response = res.data;

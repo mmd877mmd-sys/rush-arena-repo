@@ -77,7 +77,7 @@ const PlayMatch = () => {
 
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEB_URL}api/matches`,
+          `${process.env.NEXT_PUBLIC_WEB_URL}/api/matches`,
           {
             params: { type: matchType },
           }
