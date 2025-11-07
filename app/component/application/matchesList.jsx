@@ -76,9 +76,12 @@ const PlayMatch = () => {
       setError(null);
 
       try {
-        const res = await axios.get(`/api/matches`, {
-          p 
-        });
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_WEB_URL}api/matches`,
+          {
+            params: { type: matchType },
+          }
+        );
 
         const data = res.data;
         const allMatches = data?.data || [];
@@ -118,11 +121,13 @@ const PlayMatch = () => {
 
   // ✅ Handle navigation
   const handleCardClick = (id) => {
-    router.push(` play-match/details?matchId=${id}`);
+    router.push(
+      `${process.env.NEXT_PUBLIC_WEB_URL}play-match/details?matchId=${id}`
+    );
   };
 
   // ✅ Handle popup
-  const 
+  const handlePopup = (id, type) => {
     setShowPopup(true);
     setMatchId(id);
     setPopUpType(type);
@@ -410,12 +415,12 @@ const PlayMatch = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     router.push(
-                      ` play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
+                      `${process.env.NEXT_PUBLIC_WEB_URL}play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
                     );
                   }}
                   disabled={isDisabled}
                   className={`w-1/3 ${
-                    isD 
+                    isDisabled
                       ? "bg-gray-500 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700"
                   }`}
