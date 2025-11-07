@@ -12,6 +12,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 import { Preferences } from "@capacitor/preferences";
+import axios from "axios";
 
 export default function CashBalanceCard() {
   const [BalanceAmount, setbalance] = useState(0);
