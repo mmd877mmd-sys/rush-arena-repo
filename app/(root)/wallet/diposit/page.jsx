@@ -1,17 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { showToast } from "@/app/component/application/tostify";
 import { Preferences } from "@capacitor/preferences";
-
+import { showToast } from "@/app/component/application/tostify";
 import ButtonLoading from "@/app/component/buttonLoading";
 
-// Zod Schema
-const depositSchema = z.object({
+// Schema
+const schema = z.object({
   method: z.enum(["Bkash", "Nagad"]),
   phone: z.string().regex(/^01[3-9]\d{8}$/, "Invalid phone number!"),
   trxId: z.string().min(4, "Enter a valid transaction ID!"),
@@ -21,84 +20,87 @@ export default function DepositPage() {
   const [method, setMethod] = useState("Bkash");
   const [loading, setLoading] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [numbers, setNumbers] = useState({ Bkash: "", Nagad: "" });
+  const [paymentNumber, setPaymentNumber] = useState("Contact to Admin");
 
-  const paymentNumber = "019XXXXXXXXX";
-  const paymentOptions = [
-    { name: "Bkash", img: "/images/assets/bkash.jpg" },
-    { name: "Nagad", img: "/images/assets/nagad.jpg" },
-  ];
+  // Fetch Admin Numbers
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_WEB_URL}api/wallets/diposit/getNumber`
+        );
+        if (data.success) {
+          setNumbers({ Bkash: data.data.Bkash, Nagad: data.data.Nagad });
+          setPaymentNumber(data.data.Bkash);
+        }
+      } catch {
+        showToast("error", "Failed to fetch current numbers");
+      }
+    })();
+  }, []);
+
+  // Update Payment Number
+  useEffect(() => {
+    setPaymentNumber(method === "Nagad" ? numbers.Bkash : numbers.Nagad);
+  }, [method, numbers]);
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
     watch,
+    formState: { errors },
   } = useForm({
-    resolver: zodResolver(depositSchema),
-    defaultValues: {
-      method: "Bkash",
-      phone: "",
-
-      trxId: "",
-    },
+    resolver: zodResolver(schema),
+    defaultValues: { method: "Bkash", phone: "", trxId: "" },
   });
 
   const onSubmit = async (data) => {
     try {
       const { value: userId } = await Preferences.get({ key: "access_token" });
-      if (!userId) {
-        showToast("error", "You are not logged in!");
-        return;
-      }
-
+      if (!userId) return showToast("error", "You are not logged in!");
       setLoading(true);
 
-      const res = await axios.post(
+      const { data: res } = await axios.post(
         `${process.env.NEXT_PUBLIC_WEB_URL}api/wallets/diposit`,
-        {
-          ...data,
-          method,
-          userId,
-        }
+        { ...data, method, userId }
       );
 
-      if (res.data.success) {
-        showToast("success", "Deposit request sent successfully!");
-
-        reset();
-      } else {
-        showToast("error", res.data.message || "Something went wrong!");
-      }
-    } catch (err) {
-      console.error(err);
+      res.success
+        ? (showToast("success", "Deposit request sent successfully!"), reset())
+        : showToast("error", res.message || "Something went wrong!");
+    } catch {
       showToast("error", "Failed to process deposit request!");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCopyNumber = () => {
+  const handleCopy = () => {
     navigator.clipboard.writeText(paymentNumber);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 1500);
   };
 
-  const watchFields = watch();
-  const isSubmitDisabled =
-    loading || !watchFields.phone || !watchFields.amount || !watchFields.trxId;
+  const { phone, trxId, amount } = watch();
+  const isDisabled = loading || !phone || !amount || !trxId;
+
+  const paymentOptions = [
+    { name: "Bkash", img: "/images/assets/bkash.jpg" },
+    { name: "Nagad", img: "/images/assets/nagad.jpg" },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-950 flex justify-center items-start p-4 pt-12">
       <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full mb-6 max-w-md p-6 space-y-6">
         <h2 className="text-lg font-bold text-center">Deposit</h2>
 
-        {/* Admin Deposit Info */}
+        {/* Admin Info */}
         <div className="bg-gray-800 p-4 rounded-lg flex justify-center items-center">
           <p className="text-gray-300 text-lg font-semibold">{paymentNumber}</p>
           <button
-            type="button"
-            onClick={handleCopyNumber}
+            onClick={handleCopy}
             className="ml-2 bg-gray-700 hover:bg-blue-500 px-3 py-1 rounded text-sm"
           >
             {copySuccess ? "Copied!" : "Copy"}
@@ -113,22 +115,22 @@ export default function DepositPage() {
           <div>
             <p className="text-gray-400 mb-2">Select Payment Method</p>
             <div className="flex space-x-4">
-              {paymentOptions.map((option) => (
+              {paymentOptions.map(({ name, img }) => (
                 <div
-                  key={option.name}
-                  onClick={() => setMethod(option.name)}
-                  className={`flex-1 p-4 rounded-lg cursor-pointer border flex flex-col items-center transition duration-200 ${
-                    method === option.name
+                  key={name}
+                  onClick={() => setMethod(name)}
+                  className={`flex-1 p-4 rounded-lg cursor-pointer border flex flex-col items-center transition ${
+                    method === name
                       ? "border-blue-500 bg-gray-800"
                       : "border-gray-700 bg-gray-900 hover:border-blue-400"
                   }`}
                 >
                   <img
-                    src={option.img}
-                    alt={option.name}
+                    src={img}
+                    alt={name}
                     className="w-full h-14 object-contain mb-2"
                   />
-                  {method === option.name && (
+                  {method === name && (
                     <span className="text-blue-400 font-bold mt-1">✔</span>
                   )}
                 </div>
@@ -136,44 +138,42 @@ export default function DepositPage() {
             </div>
           </div>
 
-          {/* Phone */}
-          <div>
-            <label className="block text-gray-400 mb-1">Phone Number</label>
-            <input
-              type="text"
-              placeholder="Enter your phone number"
-              {...register("phone")}
-              className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
-            />
-            {errors.phone && (
-              <p className="text-red-500 text-sm font-medium mt-1">
-                {errors.phone.message}
-              </p>
-            )}
-          </div>
+          {/* Inputs */}
+          {[
+            {
+              label: "Phone Number",
+              name: "phone",
+              placeholder: "Enter your phone number",
+              error: errors.phone,
+            },
+            {
+              label: "Transaction ID",
+              name: "trxId",
+              placeholder: "Enter your transaction ID",
+              error: errors.trxId,
+            },
+          ].map(({ label, name, placeholder, error }) => (
+            <div key={name}>
+              <label className="block text-gray-400 mb-1">{label}</label>
+              <input
+                type="text"
+                placeholder={placeholder}
+                {...register(name)}
+                className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
+              />
+              {error && (
+                <p className="text-red-500 text-sm font-medium mt-1">
+                  {error.message}
+                </p>
+              )}
+            </div>
+          ))}
 
-          {/* Transaction ID */}
-          <div>
-            <label className="block text-gray-400 mb-1">Transaction ID</label>
-            <input
-              type="text"
-              placeholder="Enter your transaction ID"
-              {...register("trxId")}
-              className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
-            />
-            {errors.trxId && (
-              <p className="text-red-500 text-sm font-medium mt-1">
-                {errors.trxId.message}
-              </p>
-            )}
-          </div>
-
-          {/* Submit Button */}
           <ButtonLoading
             type="submit"
             loading={loading}
             text={loading ? "Processing..." : "Deposit"}
-            disabled={isSubmitDisabled}
+            disabled={isDisabled}
             className="w-full py-3 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition"
           />
         </form>

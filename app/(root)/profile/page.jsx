@@ -14,12 +14,31 @@ import {
 } from "lucide-react";
 import { depositPage, transection, withdrawPage } from "@/config";
 import ButtonLoading from "@/app/component/buttonLoading";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Preferences } from "@capacitor/preferences";
 import { showToast } from "@/app/component/application/tostify";
+import axios from "axios";
 
 export default function ProfileSidebar() {
   const [loading, setLoading] = useState(false);
+  const [total, setTotals] = useState({});
+  // Fetch Admin Numbers
+  useEffect(() => {
+    (async () => {
+      try {
+        const { value } = await Preferences.get({ key: "access_token" });
+
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_WEB_URL}api/mymatch/?authId=${value}`
+        );
+        if (data.success) {
+          setTotals(data.data);
+        }
+      } catch {
+        showToast("error", "Failed to fetch Profile Info!");
+      }
+    })();
+  }, []);
 
   const handleLogout = async () => {
     setLoading(true);
@@ -48,20 +67,24 @@ export default function ProfileSidebar() {
         <CardContent className="p-6">
           <div className="flex flex-col items-center gap-4">
             <div className="text-center">
-              <h3 className="text-lg font-semibold">manik222</h3>
+              <h3 className="text-lg font-semibold">{total.userName}</h3>
             </div>
 
             <div className="w-full mt-3 bg-white/8 rounded-xl py-3 px-2 flex justify-between text-center">
               <div className="flex-1">
-                <div className="text-2xl font-bold">0</div>
+                <div className="text-2xl font-bold">
+                  {total.totalMatches || 0}
+                </div>
                 <div className="text-xs text-white/70">Match Played</div>
               </div>
               <div className="flex-1">
-                <div className="text-2xl font-bold">0</div>
+                <div className="text-2xl font-bold">
+                  {total.totalKills || 0}
+                </div>
                 <div className="text-xs text-white/70">Total Kill</div>
               </div>
               <div className="flex-1">
-                <div className="text-2xl font-bold">0</div>
+                <div className="text-2xl font-bold">{total.totalWins || 0}</div>
                 <div className="text-xs text-white/70">Won</div>
               </div>
             </div>

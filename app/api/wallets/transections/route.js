@@ -1,4 +1,7 @@
 import { connectDB } from "@/lib/connectDB";
+import { catchError, response } from "@/lib/healperFunc";
+import Diposits from "@/models/dipositScema";
+import Withdraws from "@/models/withdrawSchema";
 import Transactions from "@/models/transection";
 
 export async function GET(request) {
@@ -7,38 +10,52 @@ export async function GET(request) {
 
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
+    const type = searchParams.get("type"); // deposit, withdraw, bonus
 
     if (!userId) {
-      return new Response(
-        JSON.stringify({ success: false, message: "User ID is required" }),
-        { status: 400 }
-      );
+      return response(false, 400, "User ID is required");
     }
 
-    const transactions = await Transactions.find({ userId }).sort({
-      createdAt: -1,
-    });
+    let data = [];
 
-    if (!transactions.length) {
-      return new Response(
-        JSON.stringify({ success: false, message: "No transactions found" }),
-        { status: 404 }
-      );
+    switch (type) {
+      case "deposit":
+        data = await Diposits.find({ userId }).sort({ createdAt: -1 });
+        data = data.map((doc) => ({
+          ...doc._doc,
+          status: "Pending",
+          type: "deposit",
+        }));
+        break;
+      case "withdraw":
+        data = await Withdraws.find({ userId }).sort({ createdAt: -1 });
+        data = data.map((doc) => ({
+          ...doc._doc,
+          status: "Pending",
+          type: "withdraw",
+        }));
+        break;
+      case "completed":
+        data = await Transactions.find({ userId }).sort({ createdAt: -1 });
+        data = data.map((doc) => ({
+          ...doc._doc,
+          status: "Completed",
+        }));
+        break;
+      default:
+        return response(false, 400, "Invalid transaction type");
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        count: transactions.length,
-        transactions,
+        count: data.length,
+        transactions: data,
       }),
       { status: 200 }
     );
   } catch (error) {
     console.error("Error fetching transactions:", error);
-    return new Response(
-      JSON.stringify({ success: false, message: "Server error" }),
-      { status: 500 }
-    );
+    return catchError(error);
   }
 }

@@ -2,44 +2,42 @@
 
 import React, { useEffect, useState } from "react";
 import { showToast } from "./tostify";
+import axios from "axios";
 
-const dummyData = {
-  entryType: "Solo Time",
-  platform: "Mobile",
-  map: "barmuda",
-  positions: [
-    { emoji: "👑", label: "Winner", amount: 50 },
-    { emoji: "🥈", label: "2nd Position", amount: 40 },
-    { emoji: "🥉", label: "3rd Position", amount: 30 },
-    { emoji: "🏅", label: "4th Position", amount: 20 },
-    { emoji: "🎖️", label: "5th Position", amount: 10 },
-  ],
-  perKill: 5,
-  totalPrize: 405,
-  allPrize: true,
-  roomId: "123-456-789",
-  password: "RUSH2024",
-};
+import { Preferences } from "@capacitor/preferences";
 
-export default function PrizePopup({ matchId, popUpType, onClose }) {
+export default function PrizePopup({ matchId, popUpType, onClose, isJoined }) {
   const [loading, setLoading] = useState(true);
-  const [prizeData, setPrizeData] = useState(null);
+  const [matchData, setMatchData] = useState(null);
 
   // Change this dynamically from API
   const roomIds = false;
 
   useEffect(() => {
-    async function fetchPrizeData() {
+    if (!matchId) return;
+    const fetchMatches = async () => {
+      setLoading(true);
+      const { value } = await Preferences.get({ key: "access_token" });
+
       try {
-        setPrizeData(dummyData);
-      } catch (error) {
-        console.error("Error fetching prize data:", error);
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_WEB_URL}api/matches/details`,
+          {
+            params: { matchId: matchId, matchAuth: value },
+          }
+        );
+
+        setMatchData(res.data?.data);
+      } catch (err) {
+        console.error("Error fetching matches:", err);
+        showToast(false, "Somthing Went Wrong!");
       } finally {
         setLoading(false);
       }
-    }
-    fetchPrizeData();
-  }, [matchId]);
+    };
+
+    fetchMatches();
+  }, []);
 
   const copyToClipboard = async (value) => {
     try {
@@ -50,7 +48,7 @@ export default function PrizePopup({ matchId, popUpType, onClose }) {
     }
   };
 
-  if (!prizeData) return null;
+  if (!matchData) return null;
 
   return (
     <div
@@ -75,9 +73,8 @@ export default function PrizePopup({ matchId, popUpType, onClose }) {
             <div className="bg-yellow-500 text-black rounded-t-xl py-2 font-bold">
               {popUpType === "room" ? "Room Details" : "TOTAL WIN PRIZE"}
             </div>
-            <p className="mt-2 text-sm text-gray-400">
-              {prizeData.mode || prizeData.entryType} | {prizeData.platform} |{" "}
-              {prizeData.type || prizeData.entryType}
+            <p className="mt-2 text-lg font-bold text-gray-400">
+              {matchData.title}
             </p>
           </div>
 
@@ -88,46 +85,62 @@ export default function PrizePopup({ matchId, popUpType, onClose }) {
             <div className="mt-4 space-y-2 pb-8 text-center text-sm">
               {popUpType === "room" && (
                 <>
-                  {!roomIds ? (
+                  {!isJoined ? (
                     <p className="font-bold my-4 text-yellow-400">
-                      ম্যাচ শুরু হওয়ার ৫-১০ মিনিট আগে Room Id শেয়ার করা হবে।
+                      Sorry! আপনি এখনো এই ম্যাচে জয়েন হন নি।
                     </p>
-                  ) : (
+                  ) : matchData.roomId !== "" && matchData.roomPass !== "" ? (
                     <>
                       <div className="flex justify-center items-center gap-2 my-2">
-                        <p>🔥 Room ID: {prizeData.roomId}</p>
+                        <p>🔥 Room ID: {matchData.roomId}</p>
                         <button
-                          onClick={() => copyToClipboard(prizeData.roomId)}
+                          onClick={() => copyToClipboard(matchData.roomId)}
                           className="bg-gray-600 text-white px-2 py-1 rounded hover:bg-gray-700"
                         >
                           Copy
                         </button>
                       </div>
                       <div className="flex justify-center items-center gap-2 my-2">
-                        <p>🔑 Password: {prizeData.password}</p>
+                        <p>🔑 Password: {matchData.roomPass}</p>
                         <button
-                          onClick={() => copyToClipboard(prizeData.password)}
+                          onClick={() => copyToClipboard(matchData.roomPass)}
                           className="bg-gray-600 text-white px-2 py-1 rounded hover:bg-gray-700"
                         >
                           Copy
                         </button>
                       </div>
                     </>
+                  ) : (
+                    <p className="font-bold my-4 text-yellow-400">
+                      ম্যাচ শুরু হওয়ার ৫-১০ মিনিট আগে Room ID শেয়ার করা হবে।
+                    </p>
                   )}
                 </>
               )}
 
               {popUpType === "prize" && (
                 <>
-                  {prizeData.allPrize &&
-                    prizeData.positions.map((pos, i) => (
-                      <p key={i}>
-                        {pos.emoji} {pos.label} - {pos.amount} Taka
-                      </p>
-                    ))}
-                  <p>🔥 Per Kill: {prizeData.perKill} Taka</p>
+                  {matchData.prizeDetails &&
+                    matchData.prizeDetails.map((amount, i) => {
+                      const titles = [
+                        "👑 First Prize",
+                        "🥈 Second Prize",
+                        "🥉 Third Prize",
+                        "🏅 Fourth Prize",
+                        "🎖️ Fifth Prize",
+                      ];
+                      const label = titles[i] || `Position ${i + 1}`;
+                      return (
+                        <p key={i}>
+                          <span className=" text-green-500">{label} -</span>{" "}
+                          {amount} Taka
+                        </p>
+                      );
+                    })}
+
+                  <p>🔥 Per Kill: {matchData.perKill} Taka</p>
                   <p className="font-bold my-4 text-yellow-400">
-                    🏆 Total Prize Pool: {prizeData.totalPrize} Taka
+                    🏆 Total Prize Pool: {matchData.winPrize} Taka
                   </p>
                 </>
               )}

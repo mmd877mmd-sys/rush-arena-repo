@@ -2,18 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { Preferences } from "@capacitor/preferences";
+import { showToast } from "@/app/component/application/tostify";
+import { Button } from "@/components/ui/button";
 
 export default function TransactionHistoryPage() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [txnType, setTxnType] = useState("deposit"); // default filter
 
   const getStatusBgColor = (status) => {
     switch (status) {
       case "Completed":
         return "bg-green-700";
       case "Pending":
-        return "bg-yellow-700";
+        return "bg-yellow-600";
       case "Failed":
         return "bg-red-700";
       default:
@@ -21,47 +24,47 @@ export default function TransactionHistoryPage() {
     }
   };
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        setLoading(true);
-        setError("");
+  const fetchTransactions = async (type) => {
+    try {
+      setLoading(true);
+      setError("");
 
-        // Get token (userId) from Capacitor Preferences
-        const { value: userId } = await Preferences.get({
-          key: "access_token",
-        });
+      const { value: userId } = await Preferences.get({ key: "access_token" });
 
-        if (!userId) {
-          setError("You are not logged in!");
-          setLoading(false);
-          return;
-        }
-
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_WEB_URL}api/wallets/transections?userId=${userId}`
-        );
-        const data = await res.json();
-
-        if (!res.ok || !data.success) {
-          throw new Error(data.message || "Failed to fetch transactions");
-        }
-
-        setTransactions(data.transactions || []);
-      } catch (err) {
-        console.error("Error fetching transactions:", err);
-        setError(err.message || "Something went wrong");
-      } finally {
+      if (!userId) {
+        setError("You are not logged in!");
         setLoading(false);
+        return;
       }
-    };
 
-    fetchTransactions();
-  }, []);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_WEB_URL}api/wallets/transections?userId=${userId}&type=${type}`
+      );
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        showToast("error", data.message || "Failed to fetch transactions");
+      }
+
+      setTransactions(data.transactions || []);
+    } catch (err) {
+      console.error("Error fetching transactions:", err);
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactions(txnType);
+  }, [txnType]); // refetch when txnType changes
 
   const sortedTransactions = [...transactions].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
+
+  // Button active check
+  const isActive = (type) => txnType === type;
 
   return (
     <>
@@ -76,6 +79,28 @@ export default function TransactionHistoryPage() {
           <h2 className="text-lg font-bold text-center mb-4">
             Transaction History
           </h2>
+
+          {/* Filter Buttons */}
+          <div className="flex justify-center space-x-2 mb-4">
+            <Button
+              onClick={() => setTxnType("deposit")}
+              className={isActive("deposit") ? "bg-blue-600" : "bg-gray-700"}
+            >
+              Deposits
+            </Button>
+            <Button
+              onClick={() => setTxnType("withdraw")}
+              className={isActive("withdraw") ? "bg-blue-600" : "bg-gray-700"}
+            >
+              Withdraws
+            </Button>
+            <Button
+              onClick={() => setTxnType("completed")}
+              className={isActive("completed") ? "bg-blue-600" : "bg-gray-700"}
+            >
+              Completed
+            </Button>
+          </div>
 
           {/* Error State */}
           {!loading && error && (
@@ -117,12 +142,12 @@ export default function TransactionHistoryPage() {
                   <div className="flex flex-col items-end mt-2 md:mt-0">
                     <span
                       className={`font-bold ${
-                        txn.type === "Deposit"
+                        txn.type === "deposit"
                           ? "text-green-300"
                           : "text-red-300"
                       }`}
                     >
-                      {txn.type === "Deposit" ? "+" : "-"}
+                      {txn.type === "deposit" ? "+" : "-"}
                       {txn.amount} ৳
                     </span>
                     <span className="mt-1 text-xs font-medium px-2 py-1 rounded-full bg-white text-black">
@@ -137,7 +162,7 @@ export default function TransactionHistoryPage() {
             </div>
           )}
         </div>
-      </div>{" "}
+      </div>
     </>
   );
 }

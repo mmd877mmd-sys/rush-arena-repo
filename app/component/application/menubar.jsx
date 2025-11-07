@@ -6,9 +6,11 @@ import Image from "next/image";
 import { Preferences } from "@capacitor/preferences";
 
 import { showToast } from "./tostify";
+import { RotateCcw } from "lucide-react";
 
 export default function Navbar() {
   const [BalanceAmount, setbalance] = useState(0);
+  const [reloadSpin, setReloadSpin] = useState(false);
 
   useEffect(() => {
     async function loadUser() {
@@ -35,6 +37,14 @@ export default function Navbar() {
 
     loadUser();
   }, []);
+
+  // ✅ reload with spin animation
+  const handleReload = () => {
+    setReloadSpin(true);
+    setTimeout(() => {
+      window.location.reload();
+    }, 700);
+  };
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 min-h-[38px] bg-[#0A0020] flex justify-between py-3 px-6 shadow-[0_-1px_10px_rgba(0,0,0,0.4)] z-99">
@@ -45,7 +55,7 @@ export default function Navbar() {
             alt="Logo"
             width={52}
             height={52}
-            className="rounded-full"
+            className="rounded-full object-cover h-auto"
           />
           <h1 className="text-xl font-black text-yellow-400 uppercase tracking-tighter drop-shadow-[2px_2px_0_#000]">
             Rush Arena
@@ -59,12 +69,22 @@ export default function Navbar() {
             alt="wallet"
             width={56}
             height={56}
-            className="rounded  object-cover"
+            className="rounded h-auto object-cover"
           />
           <span className="font-medium text-white">
             ৳ {isNaN(Number(BalanceAmount)) ? 0 : Number(BalanceAmount)}
           </span>
         </div>
+
+        <button
+          onClick={handleReload}
+          disabled={reloadSpin}
+          className="flex items-center gap-2  hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition"
+        >
+          <RotateCcw
+            className={`w-5 h-5 ${reloadSpin ? "animate-spin" : ""}`}
+          />
+        </button>
       </nav>
     </>
   );

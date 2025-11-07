@@ -16,6 +16,8 @@ import {
 import PrizePopup from "./prizePopup";
 import { Preferences } from "@capacitor/preferences";
 import { showToast } from "./tostify";
+import axios from "axios";
+import { RotateCcw } from "lucide-react";
 
 // ✅ helper to get image based on type
 const getMatchImage = (matchType) => {
@@ -47,6 +49,8 @@ const PlayMatch = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popUpType, setPopUpType] = useState(null);
   const [matchId, setMatchId] = useState(null);
+  const [isJoined, setIsJoined] = useState(false);
+  const [rotating, setRotating] = useState(false);
 
   // ✅ Format time properly
   const formatDate = (date) => {
@@ -63,28 +67,31 @@ const PlayMatch = () => {
   };
 
   // ✅ Fetch matches and user's joined matches
+
   useEffect(() => {
     if (!matchType) return;
 
     const fetchMatches = async () => {
       setLoading(true);
       setError(null);
-      try {
-        const res = await fetch(
-          `${
-            process.env.NEXT_PUBLIC_WEB_URL
-          }api/matches?type=${encodeURIComponent(matchType)}`
-        );
-        if (!res.ok) throw new Error("No matches found!");
 
-        const data = await res.json();
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_WEB_URL}api/matches`,
+          {
+            params: { type: matchType },
+          }
+        );
+
+        const data = res.data;
         const allMatches = data?.data || [];
 
-        // filter and sort
+        // Filter and sort
         const filtered = allMatches
           .filter((m) => m.matchType === matchType)
           .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
 
+        // Check logged user
         const { value: authId } = await Preferences.get({
           key: "access_token",
         });
@@ -101,7 +108,9 @@ const PlayMatch = () => {
         setMatches(filtered);
       } catch (err) {
         console.error("Error fetching matches:", err);
-        setError(err.message);
+        const message =
+          err.response?.data?.message || err.message || "No matches found!";
+        setError(message);
       } finally {
         setLoading(false);
       }
@@ -122,6 +131,12 @@ const PlayMatch = () => {
     setShowPopup(true);
     setMatchId(id);
     setPopUpType(type);
+  };
+  const handleReload = () => {
+    setRotating(true);
+    setTimeout(() => {
+      window.location.reload();
+    }, 700); // reload after short spin
   };
 
   // ✅ Derived matches (not joined)
@@ -166,9 +181,20 @@ const PlayMatch = () => {
 
   return (
     <div className="space-y-4 bg-gray-400 min-h-screen p-4 sm:flex sm:flex-col gap-4">
-      <h1 className="text-center text-2xl text-fuchsia-50 font-bold mb-6">
-        {matchType}
-      </h1>
+      <div className="flex items-center justify-around">
+        <h1 className="text-center text-2xl text-fuchsia-50 font-bold mb-6">
+          {matchType}
+        </h1>
+
+        <button
+          onClick={handleReload}
+          className="flex items-center justify-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
+          disabled={rotating}
+        >
+          <RotateCcw className={`w-5 h-5 ${rotating ? "animate-spin" : ""}`} />
+          <span>{rotating ? "Reloading..." : "Reload"}</span>
+        </button>
+      </div>
 
       {/* ✅ Joined Matches */}
       {joinedMatch.map((match) => (
@@ -267,6 +293,7 @@ const PlayMatch = () => {
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
+                  setIsJoined(true);
                   handlePopup(match._id, "room");
                 }}
                 variant="outline"
@@ -406,6 +433,7 @@ const PlayMatch = () => {
                 <Button
                   onClick={(e) => {
                     e.stopPropagation();
+                    setIsJoined(false);
                     handlePopup(match._id, "room");
                   }}
                   variant="outline"
@@ -443,6 +471,7 @@ const PlayMatch = () => {
         <PrizePopup
           matchId={matchId}
           popUpType={popUpType}
+          isJoined={isJoined}
           onClose={() => setShowPopup(false)}
         />
       )}
