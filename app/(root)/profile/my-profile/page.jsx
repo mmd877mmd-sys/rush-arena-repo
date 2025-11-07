@@ -44,12 +44,9 @@ export default function ProfilePage() {
         }
         setAuthId(value);
 
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEB_URL}/api/getuser`,
-          {
-            params: { authId: value }, // Axios handles encoding automatically
-          }
-        );
+        const res = await axios.get(`/api/getuser`, {
+          params: { authId: value }, // Axios handles encoding automatically
+        });
 
         if (!res.ok) {
           const errorData = await res.json().catch(() => ({}));

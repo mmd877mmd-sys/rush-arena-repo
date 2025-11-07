@@ -29,12 +29,9 @@ export default function CashBalanceCard() {
           return;
         }
 
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEB_URL}/api/getuser`,
-          {
-            params: { authId: value }, // Axios automatically encodes this
-          }
-        );
+        const res = await axios.get(`/api/getuser`, {
+          params: { authId: value }, // Axios automatically encodes this
+        });
         const data = await res.json();
         await setbalance(data.data.dipositbalance + data.data.winbalance);
         await setdipobalance(data.data.dipositbalance);
