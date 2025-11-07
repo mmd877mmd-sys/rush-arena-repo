@@ -28,9 +28,7 @@ export default function ProfileSidebar() {
       try {
         const { value } = await Preferences.get({ key: "access_token" });
 
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEB_URL}/api/mymatch/?authId=${value}`
-        );
+        const { data } = await axios.get(` /api/mymatch/?authId=${value}`);
         if (data.success) {
           setTotals(data.data);
         }
@@ -52,7 +50,7 @@ export default function ProfileSidebar() {
         "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
       showToast("success", "Logged out successfully!");
-      window.location.href = `${process.env.NEXT_PUBLIC_WEB_URL}`;
+      window.location.href = ` `;
     } catch (error) {
       console.error("Error during logout:", error);
       showToast("error", "Failed to logout. Please try again.");

@@ -76,12 +76,9 @@ const PlayMatch = () => {
       setError(null);
 
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEB_URL}/api/matches`,
-          {
-            params: { type: matchType },
-          }
-        );
+        const res = await axios.get(` /api/matches`, {
+          params: { type: matchType },
+        });
 
         const data = res.data;
         const allMatches = data?.data || [];
@@ -121,9 +118,7 @@ const PlayMatch = () => {
 
   // ✅ Handle navigation
   const handleCardClick = (id) => {
-    router.push(
-      `${process.env.NEXT_PUBLIC_WEB_URL}play-match/details?matchId=${id}`
-    );
+    router.push(` play-match/details?matchId=${id}`);
   };
 
   // ✅ Handle popup
@@ -415,7 +410,7 @@ const PlayMatch = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     router.push(
-                      `${process.env.NEXT_PUBLIC_WEB_URL}play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
+                      ` play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
                     );
                   }}
                   disabled={isDisabled}

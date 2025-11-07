@@ -27,9 +27,7 @@ export default function DepositPage() {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEB_URL}/api/wallets/diposit/getNumber`
-        );
+        const { data } = await axios.get(` /api/wallets/diposit/getNumber`);
         if (data.success) {
           setNumbers({ Bkash: data.data.Bkash, Nagad: data.data.Nagad });
           setPaymentNumber(data.data.Bkash);
@@ -62,10 +60,11 @@ export default function DepositPage() {
       if (!userId) return showToast("error", "You are not logged in!");
       setLoading(true);
 
-      const { data: res } = await axios.post(
-        `${process.env.NEXT_PUBLIC_WEB_URL}/api/wallets/diposit`,
-        { ...data, method, userId }
-      );
+      const { data: res } = await axios.post(` /api/wallets/diposit`, {
+        ...data,
+        method,
+        userId,
+      });
 
       res.success
         ? (showToast("success", "Deposit request sent successfully!"), reset())

@@ -73,10 +73,7 @@ export default function ProfilePage() {
     try {
       setLoading(true);
       data.authId = loggedAuth._id;
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_WEB_URL}/api/auth/changePassword`,
-        data
-      );
+      const res = await axios.post(` /api/auth/changePassword`, data);
       const response = res.data;
 
       if (!response.success) {

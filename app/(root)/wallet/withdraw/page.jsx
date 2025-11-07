@@ -51,15 +51,12 @@ export default function WithdrawPage() {
       }
 
       setLoading(true);
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_WEB_URL}/api/wallets/withdraw`,
-        {
-          method,
-          userId,
-          receiverPhone: data.receiverPhone,
-          amount: data.amount,
-        }
-      );
+      const res = await axios.post(` /api/wallets/withdraw`, {
+        method,
+        userId,
+        receiverPhone: data.receiverPhone,
+        amount: data.amount,
+      });
 
       if (res.data.success) {
         reset();

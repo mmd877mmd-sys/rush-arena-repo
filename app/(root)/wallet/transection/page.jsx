@@ -38,7 +38,7 @@ export default function TransactionHistoryPage() {
       }
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_WEB_URL}/api/wallets/transections?userId=${userId}&type=${type}`
+        ` /api/wallets/transections?userId=${userId}&type=${type}`
       );
       const data = await res.json();
 

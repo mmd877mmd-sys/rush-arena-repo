@@ -19,10 +19,9 @@ export default function MatchDetails() {
     const fetchMatch = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEB_URL}/api/matches/details`,
-          { params: { matchId } }
-        );
+        const res = await axios.get(` /api/matches/details`, {
+          params: { matchId },
+        });
 
         const data = res.data?.data;
         setMatch(data || null);
