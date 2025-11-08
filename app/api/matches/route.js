@@ -1,10 +1,7 @@
 import { connectDB } from "@/lib/connectDB";
 import Matches from "@/models/matches";
-import { corsHeaders, handleCors } from "@/lib/cors";
 
 export async function GET(request) {
-  const preflight = handleCors(request);
-  if (preflight) return preflight;
   try {
     await connectDB();
 

@@ -22,7 +22,7 @@ export default function Navbar() {
         }
 
         // ✅ Fetch user by authId
-        const res = await axios.get(`/getuser`, {
+        const res = await axios.get(`/api/getuser`, {
           params: { authId: value },
         });
 

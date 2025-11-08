@@ -3,7 +3,6 @@ import User from "@/models/user";
 import { z } from "zod";
 import { catchError, response } from "@/lib/healperFunc";
 import withdrawSchema from "@/models/withdrawSchema";
-import { corsHeaders, handleCors } from "@/lib/cors";
 
 // Zod schema
 const zwithdrawSchema = z.object({
@@ -15,9 +14,6 @@ const zwithdrawSchema = z.object({
 
 // Named export for POST method
 export async function POST(req) {
-  const preflight = handleCors(request);
-  if (preflight) return preflight;
-
   try {
     await connectDB();
 

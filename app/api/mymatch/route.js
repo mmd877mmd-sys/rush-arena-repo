@@ -1,11 +1,8 @@
 import { connectDB } from "@/lib/connectDB";
 import { response } from "@/lib/healperFunc";
 import MyMathes from "@/models/myMatch";
-import { corsHeaders, handleCors } from "@/lib/cors";
 
 export async function GET(request) {
-  const preflight = handleCors(request);
-  if (preflight) return preflight;
   try {
     await connectDB();
 

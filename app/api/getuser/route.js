@@ -28,7 +28,8 @@ export async function GET(request) {
       {
         status: 200,
         headers: { "Content-Type": "application/json" },
-      }
+      },
+      { headers: corsHeaders() }
     );
   } catch (error) {
     console.error("API error:", error);

@@ -2,11 +2,8 @@ import { connectDB } from "@/lib/connectDB";
 import NumberModel from "@/models/numbers";
 
 import { NextResponse } from "next/server";
-import { corsHeaders, handleCors } from "@/lib/cors";
 
 export async function GET(req) {
-  const preflight = handleCors(request);
-  if (preflight) return preflight;
   try {
     await connectDB();
 
