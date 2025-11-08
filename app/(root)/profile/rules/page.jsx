@@ -1,20 +1,25 @@
 "use client";
-
-import useRemoteConfig from "@/hooks/useRemoteConfig";
+import {
+  MatchType1,
+  MatchType2,
+  MatchType3,
+  MatchType4,
+  MatchType5,
+  MatchType6,
+} from "@/config";
 import { useState, useRef, useEffect } from "react";
 
 export default function RulesPage() {
-  const { config, configLoading } = useRemoteConfig();
   const [activeTab, setActiveTab] = useState(0);
   const scrollRef = useRef(null);
 
   const tabs = [
-    config.pages.MatchType1,
-    config.pages.MatchType2,
-    config.pages.MatchType3,
-    config.pages.MatchType4,
-    config.pages.MatchType5,
-    config.pages.MatchType6,
+    MatchType1,
+    MatchType2,
+    MatchType3,
+    MatchType4,
+    MatchType5,
+    MatchType6,
   ];
 
   const contents = [
