@@ -1,29 +1,54 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
-const MarqueeText = ({ text }) => {
+const MarqueeText = () => {
   const marqueeRef = useRef(null);
-  const [duration, setDuration] = useState(30); // fallback duration
+  const [duration, setDuration] = useState(30);
   const [scrollWidth, setScrollWidth] = useState(0);
+  const [text, setText] = useState(
+    "Welcome to Rush Arena! Welcome to Rush Arena! Welcome to Rush Arena!"
+  );
 
+  // Fetch marquee message from API
+  useEffect(() => {
+    const fetchMsg = async () => {
+      try {
+        const res = await axios.get(`/api/massage`, {
+          params: { type: "msg" },
+        });
+
+        if (res?.data?.msg) {
+          setText(res.data.msg);
+        } else {
+          console.warn("No message found in API response.");
+        }
+      } catch (err) {
+        console.error("Error fetching marquee message:", err);
+      }
+    };
+
+    fetchMsg();
+  }, []);
+
+  // Dynamically calculate scroll duration
   useEffect(() => {
     const el = marqueeRef.current;
     if (!el) return;
 
-    // Measure full scroll width
-    const width = el.scrollWidth / 2; // only one span's width
+    const width = el.scrollWidth / 2;
     setScrollWidth(width);
 
-    // Set a base scroll speed (pixels per second)
-    const speed = 100; // increase this for faster scroll
+    const speed = 100; // pixels per second
     const calculatedDuration = width / speed;
 
-    setDuration(calculatedDuration);
+    setDuration(calculatedDuration || 30);
   }, [text]);
 
   return (
-    <div className="w-full overflow-hidden mt-[-15] bg-amber-100 rounded p-3 relative">
-      {/* Marquee Wrapper */}
+    <div className="w-full overflow-hidden mt-[-15px] bg-amber-100 rounded p-3 relative">
+      {/* Marquee Container */}
       <div
         ref={marqueeRef}
         className="flex whitespace-nowrap text-md text-gray-800 font-semibold"
@@ -35,11 +60,11 @@ const MarqueeText = ({ text }) => {
         <span className="pr-10">{text}</span>
       </div>
 
-      {/* Gradient edges for smooth fade effect */}
+      {/* Fade Gradient Edges */}
       <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-amber-100 to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-amber-100 to-transparent" />
 
-      {/* Inline CSS */}
+      {/* Inline Animation Style */}
       <style jsx>{`
         @keyframes marquee {
           0% {
