@@ -37,7 +37,7 @@ const MarqueeText = () => {
     const el = marqueeRef.current;
     if (!el) return;
 
-    const width = el.scrollWidth / 2;
+    const width = el.scrollWidth / 3; // more smoothness
     setScrollWidth(width);
 
     const speed = 100; // pixels per second
@@ -56,7 +56,10 @@ const MarqueeText = () => {
           animation: `marquee ${duration}s linear infinite`,
         }}
       >
+        {/* Duplicate text multiple times for true infinite effect */}
         <span className="pr-10 ps-6">{text}</span>
+        <span className="pr-10">{text}</span>
+        <span className="pr-10">{text}</span>
         <span className="pr-10">{text}</span>
       </div>
 
