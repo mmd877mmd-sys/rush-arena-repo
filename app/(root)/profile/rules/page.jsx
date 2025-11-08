@@ -488,7 +488,7 @@ export default function RulesPage() {
       {/* Tabs */}
       <div
         ref={scrollRef}
-        className="flex overflow-x-auto space-x-2 mt-18 scrollbar-hide mb-6"
+        className="flex overflow-x-auto space-x-2 mt-4 mb-6 no-scrollbar"
       >
         {tabs.map((tab, i) => (
           <button
@@ -509,6 +509,16 @@ export default function RulesPage() {
       <div className="bg-gray-900 p-4 rounded-2xl shadow-lg text-sm leading-relaxed">
         {contents[activeTab]}
       </div>
+
+      <style jsx>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
+        }
+      `}</style>
     </div>
   );
 }
