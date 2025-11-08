@@ -190,145 +190,9 @@ const PlayMatch = () => {
           <span>{rotating ? "Reloading..." : "Reload"}</span>
         </button>
       </div>
-
-      {/* ✅ Joined Matches */}
-      {joinedMatch.map((match) => (
-        <Card
-          key={match._id}
-          className="bg-gray-800 text-white border border-gray-700 sm:w-full hover:bg-gray-700 transition cursor-pointer"
-          onClick={() => handleCardClick(match._id)}
-        >
-          <CardHeader>
-            <div className="flex gap-4 justify-start">
-              <div className="w-16 h-16 min-w-16 rounded-full overflow-hidden relative">
-                <Image
-                  src={getMatchImage(match.matchType)}
-                  alt={match.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <CardTitle className="flex flex-col justify-center gap-1">
-                <strong>{match.title}</strong>
-                <p className="text-sm text-gray-300">
-                  {formatDate(match.startTime)}
-                </p>
-              </CardTitle>
-            </div>
-          </CardHeader>
-
-          <CardContent className="space-y-3">
-            {/* ✅ Prize Details */}
-            <div className="flex justify-around">
-              <div className="text-green-500 font-bold flex flex-col items-center">
-                <strong>+ WIN PRIZE</strong>
-                <span>{match.winPrize} TK</span>
-              </div>
-              <div className="text-blue-500 font-bold flex flex-col items-center">
-                <strong>+ PER KILL</strong>
-                <span>{match.perKill} TK</span>
-              </div>
-              <div className="text-red-500 font-bold flex flex-col items-center">
-                <strong>ENTRY FEE</strong>
-                <span>{match.entryFee} TK</span>
-              </div>
-            </div>
-
-            {/* ✅ Match Info */}
-            <div className="flex justify-between text-gray-300 mt-2">
-              <div className="flex flex-col items-center w-full">
-                <strong>ENTRY TYPE</strong>
-                <span>{match.entryType}</span>
-              </div>
-              <div className="flex flex-col items-center border-x-4 border-amber-600 w-full">
-                <strong>MAP</strong>
-                <span>{match.map}</span>
-              </div>
-              <div className="flex flex-col items-center w-full">
-                <strong>VERSION</strong>
-                <span>MOBILE</span>
-              </div>
-            </div>
-
-            {/* ✅ Joined UI */}
-            <div className="flex justify-between items-center my-4 gap-3">
-              <div className="w-2/3">
-                <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
-                  <div
-                    className="bg-green-500 h-4"
-                    style={{
-                      width: `${
-                        match.totalSpots
-                          ? (match.joinedPlayers.length / match.totalSpots) *
-                            100
-                          : 0
-                      }%`,
-                    }}
-                  />
-                </div>
-                <p className="text-sm text-gray-400">
-                  Only {match.totalSpots - match.joinedPlayers.length} spots
-                  left ({match.joinedPlayers.length}/{match.totalSpots})
-                </p>
-              </div>
-
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  showToast("success", "Already Joined!");
-                }}
-                className="w-1/3 bg-blue-900 hover:bg-blue-800"
-              >
-                Joined
-              </Button>
-            </div>
-
-            {/* ✅ Buttons */}
-            <div className="flex justify-between mt-2">
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsJoined(true);
-                  handlePopup(match._id, "room");
-                }}
-                variant="outline"
-                className="border-gray-600 text-black"
-              >
-                Room Details
-              </Button>
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePopup(match._id, "prize");
-                }}
-                variant="outline"
-                className="border-gray-600 text-black"
-              >
-                Total Prize Details
-              </Button>
-            </div>
-
-            <div className="flex items-center justify-between gap-3">
-              <div className="w-2/3 p-2 bg-green-600 rounded text-center font-bold">
-                <Countdown targetDate={match.startTime} />
-              </div>
-              <strong className="w-1/3 p-2 bg-green-800 rounded text-center font-bold">
-                #{match.serialNumber + 100}
-              </strong>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-
-      {/* ✅ Available Matches */}
-      {availableMatches.map((match) => {
-        const isFull = match.joinedPlayers.length >= match.totalSpots;
-        const isOver =
-          new Date(match.startTime).getTime() <= new Date().getTime();
-        const buttonText = isFull ? "Full" : isOver ? "Started" : "Join Now";
-        const isDisabled = isFull || isOver;
-
-        return (
+      <div className="grid md:grid-cols-2 gap-3  ">
+        {/* ✅ Joined Matches */}
+        {joinedMatch.map((match) => (
           <Card
             key={match._id}
             className="bg-gray-800 text-white border border-gray-700 sm:w-full hover:bg-gray-700 transition cursor-pointer"
@@ -354,7 +218,7 @@ const PlayMatch = () => {
             </CardHeader>
 
             <CardContent className="space-y-3">
-              {/* ✅ Prize Info */}
+              {/* ✅ Prize Details */}
               <div className="flex justify-around">
                 <div className="text-green-500 font-bold flex flex-col items-center">
                   <strong>+ WIN PRIZE</strong>
@@ -370,6 +234,7 @@ const PlayMatch = () => {
                 </div>
               </div>
 
+              {/* ✅ Match Info */}
               <div className="flex justify-between text-gray-300 mt-2">
                 <div className="flex flex-col items-center w-full">
                   <strong>ENTRY TYPE</strong>
@@ -385,6 +250,7 @@ const PlayMatch = () => {
                 </div>
               </div>
 
+              {/* ✅ Joined UI */}
               <div className="flex justify-between items-center my-4 gap-3">
                 <div className="w-2/3">
                   <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
@@ -409,26 +275,20 @@ const PlayMatch = () => {
                 <Button
                   onClick={(e) => {
                     e.stopPropagation();
-                    router.push(
-                      `${process.env.NEXT_PUBLIC_WEB_URL}play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
-                    );
+                    showToast("success", "Already Joined!");
                   }}
-                  disabled={isDisabled}
-                  className={`w-1/3 ${
-                    isDisabled
-                      ? "bg-gray-500 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700"
-                  }`}
+                  className="w-1/3 bg-blue-900 hover:bg-blue-800"
                 >
-                  {buttonText}
+                  Joined
                 </Button>
               </div>
 
+              {/* ✅ Buttons */}
               <div className="flex justify-between mt-2">
                 <Button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setIsJoined(false);
+                    setIsJoined(true);
                     handlePopup(match._id, "room");
                   }}
                   variant="outline"
@@ -458,18 +318,160 @@ const PlayMatch = () => {
               </div>
             </CardContent>
           </Card>
-        );
-      })}
+        ))}
 
-      {/* ✅ Popup */}
-      {showPopup && (
-        <PrizePopup
-          matchId={matchId}
-          popUpType={popUpType}
-          isJoined={isJoined}
-          onClose={() => setShowPopup(false)}
-        />
-      )}
+        {/* ✅ Available Matches */}
+        {availableMatches.map((match) => {
+          const isFull = match.joinedPlayers.length >= match.totalSpots;
+          const isOver =
+            new Date(match.startTime).getTime() <= new Date().getTime();
+          const buttonText = isFull ? "Full" : isOver ? "Started" : "Join Now";
+          const isDisabled = isFull || isOver;
+
+          return (
+            <Card
+              key={match._id}
+              className="bg-gray-800 text-white border border-gray-700 sm:w-full hover:bg-gray-700 transition cursor-pointer"
+              onClick={() => handleCardClick(match._id)}
+            >
+              <CardHeader>
+                <div className="flex gap-4 justify-start">
+                  <div className="w-16 h-16 min-w-16 rounded-full overflow-hidden relative">
+                    <Image
+                      src={getMatchImage(match.matchType)}
+                      alt={match.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <CardTitle className="flex flex-col justify-center gap-1">
+                    <strong>{match.title}</strong>
+                    <p className="text-sm text-gray-300">
+                      {formatDate(match.startTime)}
+                    </p>
+                  </CardTitle>
+                </div>
+              </CardHeader>
+
+              <CardContent className="space-y-3">
+                {/* ✅ Prize Info */}
+                <div className="flex justify-around">
+                  <div className="text-green-500 font-bold flex flex-col items-center">
+                    <strong>+ WIN PRIZE</strong>
+                    <span>{match.winPrize} TK</span>
+                  </div>
+                  <div className="text-blue-500 font-bold flex flex-col items-center">
+                    <strong>+ PER KILL</strong>
+                    <span>{match.perKill} TK</span>
+                  </div>
+                  <div className="text-red-500 font-bold flex flex-col items-center">
+                    <strong>ENTRY FEE</strong>
+                    <span>{match.entryFee} TK</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between text-gray-300 mt-2">
+                  <div className="flex flex-col items-center w-full">
+                    <strong>ENTRY TYPE</strong>
+                    <span>{match.entryType}</span>
+                  </div>
+                  <div className="flex flex-col items-center border-x-4 border-amber-600 w-full">
+                    <strong>MAP</strong>
+                    <span>{match.map}</span>
+                  </div>
+                  <div className="flex flex-col items-center w-full">
+                    <strong>VERSION</strong>
+                    <span>MOBILE</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center my-4 gap-3">
+                  <div className="w-2/3">
+                    <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+                      <div
+                        className="bg-green-500 h-4"
+                        style={{
+                          width: `${
+                            match.totalSpots
+                              ? (match.joinedPlayers.length /
+                                  match.totalSpots) *
+                                100
+                              : 0
+                          }%`,
+                        }}
+                      />
+                    </div>
+                    <p className="text-sm text-gray-400">
+                      Only {match.totalSpots - match.joinedPlayers.length} spots
+                      left ({match.joinedPlayers.length}/{match.totalSpots})
+                    </p>
+                  </div>
+
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(
+                        `${process.env.NEXT_PUBLIC_WEB_URL}play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
+                      );
+                    }}
+                    disabled={isDisabled}
+                    className={`w-1/3 ${
+                      isDisabled
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-blue-600 hover:bg-blue-700"
+                    }`}
+                  >
+                    {buttonText}
+                  </Button>
+                </div>
+
+                <div className="flex justify-between mt-2">
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsJoined(false);
+                      handlePopup(match._id, "room");
+                    }}
+                    variant="outline"
+                    className="border-gray-600 text-black"
+                  >
+                    Room Details
+                  </Button>
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePopup(match._id, "prize");
+                    }}
+                    variant="outline"
+                    className="border-gray-600 text-black"
+                  >
+                    Total Prize Details
+                  </Button>
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <div className="w-2/3 p-2 bg-green-600 rounded text-center font-bold">
+                    <Countdown targetDate={match.startTime} />
+                  </div>
+                  <strong className="w-1/3 p-2 bg-green-800 rounded text-center font-bold">
+                    #{match.serialNumber + 100}
+                  </strong>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+
+        {/* ✅ Popup */}
+        {showPopup && (
+          <PrizePopup
+            matchId={matchId}
+            popUpType={popUpType}
+            isJoined={isJoined}
+            onClose={() => setShowPopup(false)}
+          />
+        )}
+      </div>
     </div>
   );
 };
