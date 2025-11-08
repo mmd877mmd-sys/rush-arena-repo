@@ -1,12 +1,25 @@
 "use client";
-import {
-  telegramlink,
-  whatsappLink,
-  facebooklink,
-  youtubelink, // ✅ Added YouTube link import
-} from "@/config";
+
+import useRemoteConfig from "@/hooks/useRemoteConfig";
 
 export default function ContactPage() {
+  const { config, configLoading } = useRemoteConfig();
+
+  useEffect(() => {
+    async function fetchLinks() {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_WEB_URL}/config.json`
+        );
+        setallLink(res.data.links);
+      } catch (err) {
+        console.error("Error fetching links:", err);
+      }
+    }
+
+    fetchLinks();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-950 flex p-4 justify-center">
       <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-md overflow-hidden flex flex-col">
@@ -38,7 +51,7 @@ export default function ContactPage() {
               </div>
             </div>
             <a
-              href={telegramlink}
+              href={config.pages.telegramlink}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 hover:bg-blue-700 text-center px-4 py-2 rounded-lg text-sm font-medium w-full"
@@ -67,7 +80,7 @@ export default function ContactPage() {
               </div>
             </div>
             <a
-              href={facebooklink}
+              href={config.pages.facebooklink}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 hover:bg-blue-700 text-center px-4 py-2 rounded-lg text-sm font-medium w-full"
@@ -101,7 +114,7 @@ export default function ContactPage() {
               </div>
             </div>
             <a
-              href={youtubelink}
+              href={config.pages.youtubelink}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-red-600 hover:bg-red-700 text-center px-4 py-2 rounded-lg text-sm font-medium w-full"
@@ -130,7 +143,7 @@ export default function ContactPage() {
               </div>
             </div>
             <a
-              href={whatsappLink}
+              href={config.pages.whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-600 hover:bg-green-700 text-center px-4 py-2 rounded-lg text-sm font-medium w-full"

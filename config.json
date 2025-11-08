@@ -1,0 +1,26 @@
+{
+  "matchTypes": {
+    "matchType1": "BR Match",
+    "matchType2": "Clash Squad",
+    "matchType3": "Lone Wolf King",
+    "matchType4": "Clash Squad 1V1/2V2",
+    "matchType5": "BR Squad 2V2/4V4",
+    "matchType6": "Free match"
+  },
+  "pages": {
+    "withdrawPage": "/wallet/withdraw",
+    "depositPage": "/wallet/diposit",
+    "transection": "/wallet/transection"
+  },
+  "videos": {
+    "howtojoinmatch": "#",
+    "howtogetroomid": "#",
+    "howtoaddtaka": "#"
+  },
+  "support": {
+    "telegramlink": "https://t.me/RushArena_07",
+    "whatsappLink": "#",
+    "facebooklink": "https://www.facebook.com/share/1BZVHEcofu/",
+    "youtubelink": "https://www.youtube.com/@RushArena_07"
+  }
+}

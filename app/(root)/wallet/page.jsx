@@ -1,23 +1,24 @@
 "use client";
-import {
-  depositPage,
-  howtoaddtaka,
-  howtogetroomid,
-  howtojoinmatch,
-  transection,
-  withdrawPage,
-} from "@/config";
 import Link from "next/link";
 
 import React, { useEffect, useState } from "react";
 
 import { Preferences } from "@capacitor/preferences";
 import axios from "axios";
+import useRemoteConfig from "@/hooks/useRemoteConfig";
 
 export default function CashBalanceCard() {
+  const { config, configLoading } = useRemoteConfig();
   const [BalanceAmount, setbalance] = useState(0);
   const [dipoBalance, setdipobalance] = useState(0);
   const [winBalance, setwinbalance] = useState(0);
+
+  const depositPage = config.pages.depositPage;
+  const howtoaddtaka = config.pages.howtoaddtaka;
+  const howtogetroomid = config.pages.howtogetroomid;
+  const howtojoinmatch = config.pages.howtojoinmatch;
+  const transection = config.pages.transection;
+  const withdrawPage = config.pages.withdrawPage;
 
   useEffect(() => {
     async function loadUser() {

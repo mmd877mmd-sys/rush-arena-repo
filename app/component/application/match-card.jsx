@@ -7,58 +7,57 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import {
-  MatchType1,
-  MatchType2,
-  MatchType3,
-  MatchType4,
-  MatchType5,
-  MatchType6,
-} from "@/config";
 
 import Image from "next/image";
 import Link from "next/link";
 
-const matches = [
-  {
-    title: MatchType1,
-    link: `/play-match/?type=${MatchType1}`,
-    image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068487/br-match_itpoat.jpg",
-  },
-  {
-    title: MatchType2,
-    link: `/play-match/?type=${MatchType2}`,
-    image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/clash-squad_u3dkmq.jpg",
-  },
-  {
-    title: MatchType3,
-    link: `/play-match/?type=${MatchType3}`,
-    image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/lone-wolf_wombhk.jpg",
-  },
-  {
-    title: MatchType4,
-    link: `/play-match/?type=${MatchType4}`,
-    image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761874882/download_vmg5ko.jpg",
-  },
-  {
-    title: MatchType5,
-    link: `/play-match/?type=${MatchType5}`,
-    image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/squad-brRank_etzfrb.jpg",
-  },
-  {
-    title: MatchType6,
-    link: `/play-match/?type=${MatchType6}`,
-    image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068487/free-match_k9jszq.jpg",
-  },
-];
-
 export default function MatchCards() {
+  const MatchType1 = config.pages.MatchType1;
+  const MatchType2 = config.pages.MatchType2;
+  const MatchType3 = config.pages.MatchType3;
+  const MatchType4 = config.pages.MatchType4;
+  const MatchType5 = config.pages.MatchType5;
+  const MatchType6 = config.pages.MatchType6;
+
+  const matches = [
+    {
+      title: MatchType1,
+      link: `/play-match/?type=${MatchType1}`,
+      image:
+        "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068487/br-match_itpoat.jpg",
+    },
+    {
+      title: MatchType2,
+      link: `/play-match/?type=${MatchType2}`,
+      image:
+        "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/clash-squad_u3dkmq.jpg",
+    },
+    {
+      title: MatchType3,
+      link: `/play-match/?type=${MatchType3}`,
+      image:
+        "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/lone-wolf_wombhk.jpg",
+    },
+    {
+      title: MatchType4,
+      link: `/play-match/?type=${MatchType4}`,
+      image:
+        "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761874882/download_vmg5ko.jpg",
+    },
+    {
+      title: MatchType5,
+      link: `/play-match/?type=${MatchType5}`,
+      image:
+        "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/squad-brRank_etzfrb.jpg",
+    },
+    {
+      title: MatchType6,
+      link: `/play-match/?type=${MatchType6}`,
+      image:
+        "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068487/free-match_k9jszq.jpg",
+    },
+  ];
+
   return (
     <div className="p-4">
       <h2 className="text-lg font-semibold mb-4">BR, LONE, CS MATCHES</h2>

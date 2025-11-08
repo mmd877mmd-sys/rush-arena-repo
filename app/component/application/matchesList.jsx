@@ -6,13 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Countdown from "@/app/component/countdown";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  MatchType1,
-  MatchType2,
-  MatchType3,
-  MatchType4,
-  MatchType5,
-} from "@/config";
+
 import PrizePopup from "./prizePopup";
 import { Preferences } from "@capacitor/preferences";
 import { showToast } from "./tostify";
@@ -40,6 +34,8 @@ const getMatchImage = (matchType) => {
 const PlayMatch = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { config, configLoading } = useRemoteConfig();
+
   const matchType = searchParams.get("type");
 
   const [matches, setMatches] = useState([]);
@@ -51,6 +47,13 @@ const PlayMatch = () => {
   const [matchId, setMatchId] = useState(null);
   const [isJoined, setIsJoined] = useState(false);
   const [rotating, setRotating] = useState(false);
+
+  const MatchType1 = config.pages.MatchType1;
+  const MatchType2 = config.pages.MatchType2;
+  const MatchType3 = config.pages.MatchType3;
+  const MatchType4 = config.pages.MatchType4;
+  const MatchType5 = config.pages.MatchType5;
+  const MatchType6 = config.pages.MatchType6;
 
   // ✅ Format time properly
   const formatDate = (date) => {
