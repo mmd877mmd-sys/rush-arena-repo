@@ -2,5 +2,8 @@
   "appId": "com.rushArena.app",
   "appName": "rush-arena",
   "webDir": "public",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://www.rusharena.club"
+  }
 }
