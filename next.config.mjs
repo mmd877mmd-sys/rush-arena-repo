@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: "export", // Added for static export (required for Capacitor)
+  // output: "export", // Added for static export (required for Capacitor)
   images: {
     unoptimized: true, // keep this for remote images
     remotePatterns: [
