@@ -18,11 +18,7 @@ export const howtoaddtaka = "#";
 
 // support
 
-export const telegramlink = "https://t.me/yourtelegramlink";
-export const whatsappLink = "https://wa.me/88017XXXXXXXX";
-export const facebooklink = "https://facebook.com/";
-export const youtubelink = "https://facebook.com/";
-
-// numbers and payment adress
-
-export const paymentNumber = "017XXXXXXXX";
+export const telegramlink = "https://t.me/RushArena_07";
+export const whatsappLink = "#";
+export const facebooklink = "https://www.facebook.com/share/1BZVHEcofu/";
+export const youtubelink = "https://www.youtube.com/@RushArena_07";
