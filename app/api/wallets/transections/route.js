@@ -3,8 +3,11 @@ import { catchError, response } from "@/lib/healperFunc";
 import Diposits from "@/models/dipositScema";
 import Withdraws from "@/models/withdrawSchema";
 import Transactions from "@/models/transection";
+import { corsHeaders, handleCors } from "@/lib/cors";
 
 export async function GET(request) {
+  const preflight = handleCors(request);
+  if (preflight) return preflight;
   try {
     await connectDB();
 

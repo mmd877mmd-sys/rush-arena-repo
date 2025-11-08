@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // output: "export", // Added for static export (required for Capacitor)
+  // Removed output: "export" because API routes need server runtime
   images: {
     unoptimized: true, // keep this for remote images
     remotePatterns: [

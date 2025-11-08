@@ -2,8 +2,11 @@ import { connectDB } from "@/lib/connectDB";
 import { response } from "@/lib/healperFunc";
 import Matches from "@/models/matches";
 import mongoose from "mongoose";
+import { corsHeaders, handleCors } from "@/lib/cors";
 
 export async function GET(request) {
+  const preflight = handleCors(request);
+  if (preflight) return preflight;
   try {
     await connectDB();
 

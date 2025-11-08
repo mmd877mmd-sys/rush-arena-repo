@@ -1,7 +1,10 @@
 import { connectDB } from "@/lib/connectDB";
 import Matches from "@/models/matches"; // use capital M for convention
+import { corsHeaders, handleCors } from "@/lib/cors";
 
 export async function POST(req) {
+  const preflight = handleCors(request);
+  if (preflight) return preflight;
   try {
     await connectDB();
 

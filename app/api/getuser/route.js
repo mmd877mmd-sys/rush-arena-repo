@@ -1,8 +1,11 @@
 import { connectDB } from "@/lib/connectDB";
 import { response } from "@/lib/healperFunc";
 import User from "@/models/user";
+import { corsHeaders, handleCors } from "@/lib/cors";
 
 export async function GET(request) {
+  const preflight = handleCors(request);
+  if (preflight) return preflight;
   try {
     await connectDB();
 

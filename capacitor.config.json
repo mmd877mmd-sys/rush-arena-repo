@@ -4,6 +4,7 @@
   "webDir": "public",
   "bundledWebRuntime": false,
   "server": {
-    "url": "https://www.rusharena.club"
+    "url": "https://www.rusharena.club",
+    "cleartext": false
   }
 }

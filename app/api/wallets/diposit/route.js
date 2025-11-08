@@ -3,6 +3,7 @@ import User from "@/models/user";
 import { z } from "zod";
 import { catchError, response } from "@/lib/healperFunc";
 import dipositScema from "@/models/dipositScema";
+import { corsHeaders, handleCors } from "@/lib/cors";
 
 // Validation schema
 const depositSchema = z.object({
@@ -14,6 +15,9 @@ const depositSchema = z.object({
 
 // POST method
 export async function POST(req) {
+  const preflight = handleCors(request);
+  if (preflight) return preflight;
+
   try {
     await connectDB();
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Preferences } from "@capacitor/preferences";
 import { showToast } from "@/app/component/application/tostify";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 export default function TransactionHistoryPage() {
   const [transactions, setTransactions] = useState([]);
@@ -36,7 +37,7 @@ export default function TransactionHistoryPage() {
         setLoading(false);
         return;
       }
-      const res = await axios.get("/api/your-endpoint", {
+      const res = await axios.get(`/api/wallets/transections`, {
         params: {
           userId: userId,
           type: type,

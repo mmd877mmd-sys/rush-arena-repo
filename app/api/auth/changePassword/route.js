@@ -1,8 +1,11 @@
 import User from "@/models/user";
 import { connectDB } from "@/lib/connectDB";
 import { catchError, response } from "@/lib/healperFunc";
+import { corsHeaders, handleCors } from "@/lib/cors";
 
 export async function POST(request) {
+  const preflight = handleCors(request);
+  if (preflight) return preflight;
   try {
     await connectDB();
     const body = await request.json();
