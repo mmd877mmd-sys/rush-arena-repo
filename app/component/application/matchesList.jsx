@@ -411,7 +411,7 @@ const PlayMatch = () => {
                     onClick={(e) => {
                       e.stopPropagation();
                       router.push(
-                        `${process.env.NEXT_PUBLIC_WEB_URL}play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
+                        `/play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
                       );
                     }}
                     disabled={isDisabled}

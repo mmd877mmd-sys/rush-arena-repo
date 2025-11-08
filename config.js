@@ -22,10 +22,3 @@ export const telegramlink = "https://t.me/RushArena_07";
 export const whatsappLink = "#";
 export const facebooklink = "https://www.facebook.com/share/1BZVHEcofu/";
 export const youtubelink = "https://www.youtube.com/@RushArena_07";
-<<<<<<< HEAD
-
-// numbers and payment adress
-
-export const paymentNumber = "017XXXXXXXX";
-=======
->>>>>>> main

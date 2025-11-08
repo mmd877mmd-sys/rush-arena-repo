@@ -101,7 +101,7 @@ export default function MatchDetails() {
 
       {/* Prize Details */}
       {Array.isArray(match.prizeDetails) && match.prizeDetails.length > 0 && (
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-5 rounded-xl shadow-md border border-gray-700">
+        <div className="bg-[#1f1f2e] p-5 rounded-xl shadow-md border border-gray-700">
           <h3 className="font-bold text-xl mb-3 text-white text-center">
             Prize Details
           </h3>
