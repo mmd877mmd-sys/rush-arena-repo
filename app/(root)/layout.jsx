@@ -7,7 +7,7 @@ import Navbar from "../component/application/menubar";
 import {
   requestNotificationPermission,
   listenForMessages,
-} from "../lib/notifications";
+} from "@/lib/notifications";
 
 export default function UserLayout({ children }) {
   useEffect(() => {
