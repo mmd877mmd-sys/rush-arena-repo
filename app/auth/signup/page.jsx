@@ -63,7 +63,8 @@ export default function SignupPage() {
 
       // Redirect user
 
-      window.location.href = process.env.NEXT_PUBLIC_WEB_URL;
+      // Redirect user
+      router.push(process.env.NEXT_PUBLIC_WEB_URL);
     } catch (error) {
       console.error("Signup error:", error);
       showToast(

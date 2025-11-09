@@ -58,7 +58,7 @@ export default function LoginPage() {
       showToast("success", loginResponse.message || "Login successful");
 
       // Redirect user
-      window.location.href = process.env.NEXT_PUBLIC_WEB_URL; // or use router.push(process.env.NEXT_PUBLIC_WEB_URL)
+      router.push(process.env.NEXT_PUBLIC_WEB_URL);
     } catch (error) {
       console.error("Login error:", error);
       showToast(
