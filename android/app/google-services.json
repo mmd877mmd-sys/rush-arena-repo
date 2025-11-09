@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "195845558583",
-    "project_id": "rush-arena-notifications",
-    "storage_bucket": "rush-arena-notifications.firebasestorage.app"
+    "project_number": "524879024785",
+    "project_id": "rusharena-2ee93",
+    "storage_bucket": "rusharena-2ee93.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:195845558583:android:15326ff645adfa87de0ab2",
+        "mobilesdk_app_id": "1:524879024785:android:6d4fb97a8ea65d7bc2a530",
         "android_client_info": {
           "package_name": "com.rusharena.app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAeca_8cIdDLNWVh1vDbXNj82p_TV8cFbc"
+          "current_key": "AIzaSyC-Q-qP_hfaqgQ8M304mYq0ikD-6UYFaTY"
         }
       ],
       "services": {

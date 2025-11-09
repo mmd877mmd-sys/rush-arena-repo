@@ -1,9 +1,13 @@
+"use client";
+
+import { useEffect } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import BackButtonHandler from "./component/BackButtonHandler";
 import InternetChecker from "./component/InternetChecker";
 import ProtectedRoute from "./component/protectedRoute";
+import { registerPushNotifications } from "@/utils/notificationSetup";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +28,19 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  useEffect(() => {
+    const initPush = async () => {
+      try {
+        console.log("🔔 Initializing global push notifications...");
+        await registerPushNotifications();
+      } catch (err) {
+        console.error("❌ Error initializing notifications:", err);
+      }
+    };
+
+    initPush();
+  }, []);
+
   return (
     <html lang="en">
       <body
