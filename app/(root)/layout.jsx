@@ -3,16 +3,15 @@
 import { useEffect } from "react";
 import FooterNav from "../component/application/footer";
 import Navbar from "../component/application/menubar";
-
 import {
-  requestNotificationPermission,
   listenForMessages,
+  registerForPushNotifications,
 } from "@/lib/notifications";
 
 export default function UserLayout({ children }) {
   useEffect(() => {
     // Ask permission and get token
-    requestNotificationPermission().then((token) => {
+    registerForPushNotifications().then((token) => {
       console.log("Device token saved in backend:", token);
       // Send token to your backend to store in DB
     });
