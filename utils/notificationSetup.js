@@ -1,40 +1,42 @@
+"use client";
+
 import { PushNotifications } from "@capacitor/push-notifications";
-import { FirebaseMessaging } from "@capacitor-firebase/messaging";
+import axios from "axios";
 
-export async function registerPushNotifications(authId) {
+export const registerPushNotifications = async () => {
   try {
-    // Request permission to use notifications
-    const permStatus = await PushNotifications.requestPermissions();
-    if (permStatus.receive !== "granted") {
-      console.log("Notification permission not granted");
-      return;
-    }
+    const permission = await PushNotifications.requestPermissions();
+    if (permission.receive !== "granted") return;
 
-    // Register with FCM
     await PushNotifications.register();
 
-    // Get the token
-    const tokenData = await FirebaseMessaging.getToken();
-    const token = tokenData.token;
-    console.log("FCM Token:", token);
+    PushNotifications.addListener("registration", async (token) => {
+      console.log("Push token:", token.value);
 
-    // Send the token to your backend
-    await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/save-token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ authId, token }),
+      // Optionally, send token to backend (to keep a list)
+      await axios.post("/api/savePushToken", { token: token.value });
+
+      // Or subscribe token to a topic for broadcast
+      await axios.post("/api/subscribeTopic", {
+        token: token.value,
+        topic: "allUsers",
+      });
     });
 
-    console.log("Token sent to backend successfully");
-
-    // Optional: listen for foreground messages
     PushNotifications.addListener(
       "pushNotificationReceived",
       (notification) => {
         console.log("Notification received:", notification);
       }
     );
+
+    PushNotifications.addListener(
+      "pushNotificationActionPerformed",
+      (notification) => {
+        console.log("Notification clicked:", notification);
+      }
+    );
   } catch (err) {
-    console.error("Push registration error:", err);
+    console.error("Error registering push notifications:", err);
   }
-}
+};
