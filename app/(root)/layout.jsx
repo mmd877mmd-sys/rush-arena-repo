@@ -3,38 +3,27 @@
 import { useEffect } from "react";
 import FooterNav from "../component/application/footer";
 import Navbar from "../component/application/menubar";
-import { registerPushNotifications } from "@/utils/notificationSetup";
-import { Preferences } from "@capacitor/preferences";
+
+import {
+  requestNotificationPermission,
+  listenForMessages,
+} from "../lib/notifications";
 
 export default function UserLayout({ children }) {
   useEffect(() => {
-    const initPush = async () => {
-      try {
-        // Check if notifications were already registered
-        const { value: isRegistered } = await Preferences.get({
-          key: "push_registered",
-        });
+    // Ask permission and get token
+    requestNotificationPermission().then((token) => {
+      console.log("Device token saved in backend:", token);
+      // Send token to your backend to store in DB
+    });
 
-        if (isRegistered === "true") {
-          console.log("Push notifications already registered");
-          return;
-        }
-
-        // Register push notifications
-        await registerPushNotifications();
-
-        // Mark as registered so we don't register again
-        await Preferences.set({ key: "push_registered", value: "true" });
-
-        console.log("Push notifications initialized successfully");
-      } catch (err) {
-        console.error("Error initializing push notifications:", err);
-      }
-    };
-
-    initPush();
+    // Listen for foreground messages
+    listenForMessages((payload) => {
+      alert(
+        `New notification: ${payload.notification.title} - ${payload.notification.body}`
+      );
+    });
   }, []);
-
   return (
     <>
       <Navbar />
