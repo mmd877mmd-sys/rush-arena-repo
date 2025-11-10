@@ -13,22 +13,22 @@ export default function BrowserOverlay({ children }) {
         ? navigator.userAgent || navigator.vendor || window.opera
         : "";
 
-    // Detect if app is running inside the WebView (Capacitor / custom UA)
+    // Detect if running inside your Capacitor WebView app
     const isAppWebView =
       /RushArenaApp/i.test(userAgent) || /Capacitor/i.test(userAgent);
 
-    // If NOT app, show overlay
-    if (!isAppWebView) {
-      setShowOverlay(true);
-    }
+    if (!isAppWebView) setShowOverlay(true);
   }, []);
 
   if (!showOverlay) return <>{children}</>;
 
+  // Your APK download link
+  const apkDownloadLink = "apk/rusharena.apk";
+
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-b from-[#0A051E] to-[#1B103A] flex flex-col">
-      {/* Navbar / Menu */}
-      <nav className="flex justify-between items-center px-6 py-4 border-b border-purple-700">
+      {/* Header */}
+      <header className="flex justify-between items-center px-6 py-4 border-b border-purple-700">
         <div className="flex items-center space-x-3">
           <Image
             src="/logo.png"
@@ -39,33 +39,15 @@ export default function BrowserOverlay({ children }) {
           />
           <span className="text-yellow-400 text-xl font-bold">RUSH ARENA</span>
         </div>
-        <div className="flex space-x-4">
-          <Link
-            href="#"
-            className="text-white hover:text-purple-400 font-semibold"
-          >
-            Home
-          </Link>
-          <Link
-            href="#"
-            className="text-white hover:text-purple-400 font-semibold"
-          >
-            Games
-          </Link>
-          <Link
-            href="#"
-            className="text-white hover:text-purple-400 font-semibold"
-          >
-            Tournaments
-          </Link>
-          <Link
-            href="#"
-            className="text-white hover:text-purple-400 font-semibold"
-          >
-            Contact
-          </Link>
-        </div>
-      </nav>
+
+        <Link
+          href={apkDownloadLink}
+          download
+          className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-2 rounded-full font-semibold hover:opacity-90 transition"
+        >
+          Download Now
+        </Link>
+      </header>
 
       {/* Main Content */}
       <div className="flex flex-col justify-center items-center text-center flex-1 px-4">
@@ -77,10 +59,11 @@ export default function BrowserOverlay({ children }) {
           প্রতিদিন ফ্রিফায়ার এবং আরও অনেক গেম খেলে টাকা ইনকাম করুন
         </p>
 
-        {/* Action Buttons */}
+        {/* Buttons */}
         <div className="mt-8 flex flex-col md:flex-row gap-4">
           <Link
-            href="#"
+            href={apkDownloadLink}
+            download
             className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-full shadow-lg transform transition hover:scale-105"
           >
             📱 Download Rush Arena
@@ -89,7 +72,7 @@ export default function BrowserOverlay({ children }) {
             onClick={() => setShowOverlay(false)}
             className="px-8 py-3 border border-purple-400 text-purple-400 font-semibold rounded-full hover:bg-purple-400 hover:text-white transition transform hover:scale-105"
           >
-            Learn More
+            Open in Browser
           </button>
         </div>
 
