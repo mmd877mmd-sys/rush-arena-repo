@@ -2,27 +2,24 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function BrowserOverlay({ children }) {
   const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
-    const userAgent =
-      typeof navigator !== "undefined"
-        ? navigator.userAgent || navigator.vendor || window.opera
-        : "";
+    const isCapacitorEnv =
+      typeof window !== "undefined" &&
+      typeof window.Capacitor !== "undefined" &&
+      typeof window.Capacitor.isNativePlatform === "function" &&
+      window.Capacitor.isNativePlatform();
 
-    // Detect if running inside your Capacitor WebView app
-    const isAppWebView =
-      /RushArenaApp/i.test(userAgent) || /Capacitor/i.test(userAgent);
-
-    if (!isAppWebView) setShowOverlay(true);
+    if (!isCapacitorEnv) {
+      setShowOverlay(true); // Show only in browsers
+    }
   }, []);
 
   if (!showOverlay) return <>{children}</>;
 
-  // Your APK download link
   const apkDownloadLink = "/apk/RushArena.apk";
 
   return (
@@ -31,7 +28,7 @@ export default function BrowserOverlay({ children }) {
       <header className="flex justify-between items-center px-6 py-4 border-b border-purple-700">
         <div className="flex items-center space-x-3">
           <Image
-            src="/images/logo.jpg"
+            src="images/logo.jpg"
             alt="Rush Arena Logo"
             width={48}
             height={48}
@@ -40,13 +37,13 @@ export default function BrowserOverlay({ children }) {
           <span className="text-yellow-400 text-xl font-bold">RUSH ARENA</span>
         </div>
 
-        <Link
+        <a
           href={apkDownloadLink}
           download
           className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-2 rounded-full font-semibold hover:opacity-90 transition"
         >
           Download Now
-        </Link>
+        </a>
       </header>
 
       {/* Main Content */}
@@ -61,13 +58,13 @@ export default function BrowserOverlay({ children }) {
 
         {/* Buttons */}
         <div className="mt-8 flex flex-col md:flex-row gap-4">
-          <Link
+          <a
             href={apkDownloadLink}
             download
             className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-full shadow-lg transform transition hover:scale-105"
           >
             📱 Download Rush Arena
-          </Link>
+          </a>
           <button
             onClick={() => setShowOverlay(false)}
             className="px-8 py-3 border border-purple-400 text-purple-400 font-semibold rounded-full hover:bg-purple-400 hover:text-white transition transform hover:scale-105"
