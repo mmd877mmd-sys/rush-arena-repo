@@ -31,7 +31,7 @@ export default function BrowserOverlay({ children }) {
       <header className="flex justify-between items-center px-6 py-4 border-b border-purple-700">
         <div className="flex items-center space-x-3">
           <Image
-            src="/logo.png"
+            src="images/logo.jpg"
             alt="Rush Arena Logo"
             width={48}
             height={48}
