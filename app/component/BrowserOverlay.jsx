@@ -8,9 +8,19 @@ export default function BrowserOverlay({ children }) {
   const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    const isAppWebView = /WizzWarApp/i.test(userAgent); // Detect your app WebView
-    if (!isAppWebView) setShowOverlay(true);
+    const userAgent =
+      typeof navigator !== "undefined"
+        ? navigator.userAgent || navigator.vendor || window.opera
+        : "";
+
+    // Detect if app is running inside the WebView (Capacitor / custom UA)
+    const isAppWebView =
+      /RushArenaApp/i.test(userAgent) || /Capacitor/i.test(userAgent);
+
+    // If NOT app, show overlay
+    if (!isAppWebView) {
+      setShowOverlay(true);
+    }
   }, []);
 
   if (!showOverlay) return <>{children}</>;
@@ -21,7 +31,7 @@ export default function BrowserOverlay({ children }) {
       <nav className="flex justify-between items-center px-6 py-4 border-b border-purple-700">
         <div className="flex items-center space-x-3">
           <Image
-            src="images/logo.jpg"
+            src="/logo.png"
             alt="Rush Arena Logo"
             width={48}
             height={48}
@@ -31,11 +41,28 @@ export default function BrowserOverlay({ children }) {
         </div>
         <div className="flex space-x-4">
           <Link
-            href="/apk/RushArena.apk"
-            download="RushArena.apk"
-            className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-full shadow-lg transform transition hover:scale-105"
+            href="#"
+            className="text-white hover:text-purple-400 font-semibold"
           >
-            Download
+            Home
+          </Link>
+          <Link
+            href="#"
+            className="text-white hover:text-purple-400 font-semibold"
+          >
+            Games
+          </Link>
+          <Link
+            href="#"
+            className="text-white hover:text-purple-400 font-semibold"
+          >
+            Tournaments
+          </Link>
+          <Link
+            href="#"
+            className="text-white hover:text-purple-400 font-semibold"
+          >
+            Contact
           </Link>
         </div>
       </nav>
@@ -53,17 +80,16 @@ export default function BrowserOverlay({ children }) {
         {/* Action Buttons */}
         <div className="mt-8 flex flex-col md:flex-row gap-4">
           <Link
-            href="/apk/RushArena.apk"
-            download="RushArena.apk"
+            href="#"
             className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-full shadow-lg transform transition hover:scale-105"
           >
-            📱 Download App
+            📱 Download Rush Arena
           </Link>
           <button
             onClick={() => setShowOverlay(false)}
             className="px-8 py-3 border border-purple-400 text-purple-400 font-semibold rounded-full hover:bg-purple-400 hover:text-white transition transform hover:scale-105"
           >
-            Open Here
+            Learn More
           </button>
         </div>
 
