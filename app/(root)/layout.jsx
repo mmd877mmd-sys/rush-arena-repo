@@ -9,20 +9,6 @@ import {
 } from "@/lib/notifications";
 
 export default function UserLayout({ children }) {
-  useEffect(() => {
-    // Ask permission and get token
-    registerForPushNotifications().then((token) => {
-      console.log("Device token saved in backend:", token);
-      // Send token to your backend to store in DB
-    });
-
-    // Listen for foreground messages
-    listenForMessages((payload) => {
-      alert(
-        `New notification: ${payload.notification.title} - ${payload.notification.body}`
-      );
-    });
-  }, []);
   return (
     <>
       <Navbar />
