@@ -1,10 +1,9 @@
 package com.rusharena.app;
 
 import android.os.Bundle;
+import com.getcapacitor.BridgeActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
-import com.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {
 
@@ -12,15 +11,18 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Create a temporary WebView to modify its settings
-        WebView webView = new WebView(this);
-        WebSettings webSettings = webView.getSettings();
+        // Access the WebView after Capacitor creates it
+        this.bridge.getWebView().post(() -> {
+            WebView webView = this.bridge.getWebView();
+            WebSettings webSettings = webView.getSettings();
 
-        // Get the default user agent and append your custom tag
-        String defaultUA = webSettings.getUserAgentString();
-        webSettings.setUserAgentString(defaultUA + " RushArenaApp");
+            String defaultUA = webSettings.getUserAgentString();
+            String customUA = defaultUA + " RushArenaApp";
 
-        // Optional: Log it for debugging
-        android.util.Log.d("USER_AGENT", webSettings.getUserAgentString());
+            webSettings.setUserAgentString(customUA);
+
+            // Optional: Log for debugging
+            android.util.Log.d("USER_AGENT", "Updated UA: " + customUA);
+        });
     }
 }
