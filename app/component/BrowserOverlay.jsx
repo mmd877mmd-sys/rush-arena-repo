@@ -20,7 +20,7 @@ export default function BrowserOverlay({ children }) {
 
   if (!showOverlay) return <>{children}</>;
 
-  const apkDownloadLink = "/apk/RushArena.apk";
+  const apkDownloadLink = "/apk/Rush Arena.apk";
 
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-b from-[#0A051E] to-[#1B103A] flex flex-col">
