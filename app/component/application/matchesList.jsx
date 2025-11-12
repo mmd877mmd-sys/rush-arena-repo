@@ -12,6 +12,13 @@ import {
   MatchType3,
   MatchType4,
   MatchType5,
+  MatchType6,
+  MatchType1Img,
+  MatchType2Img,
+  MatchType3Img,
+  MatchType4Img,
+  MatchType5Img,
+  MatchType6Img,
 } from "@/config";
 import PrizePopup from "./prizePopup";
 import { Preferences } from "@capacitor/preferences";
@@ -23,15 +30,17 @@ import { RotateCcw } from "lucide-react";
 const getMatchImage = (matchType) => {
   switch (matchType) {
     case MatchType1:
-      return "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068487/br-match_itpoat.jpg";
+      return MatchType1Img;
     case MatchType2:
-      return "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/clash-squad_u3dkmq.jpg";
+      return MatchType2Img;
     case MatchType3:
-      return "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/lone-wolf_wombhk.jpg";
+      return MatchType3Img;
     case MatchType4:
-      return "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761874882/download_vmg5ko.jpg";
+      return MatchType4Img;
     case MatchType5:
-      return "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761068488/squad-brRank_etzfrb.jpg";
+      return MatchType5Img;
+    case MatchType6:
+      return MatchType6Img;
     default:
       return "/images/logo.jpg";
   }
