@@ -64,7 +64,7 @@ export default function SignupPage() {
       // Redirect user
 
       // Redirect user
-      router.push(process.env.NEXT_PUBLIC_WEB_URL);
+      return router.push("https://www.rusharena.club/");
     } catch (error) {
       console.error("Signup error:", error);
       showToast(
