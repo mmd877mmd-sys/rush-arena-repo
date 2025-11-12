@@ -91,7 +91,7 @@ export default function MatchDetails() {
           </p>
           <p className="font-semibold bg-amber-800 text-center p-3">
             {"#"}
-            {match.serialNumber + 100}
+            {match.serialNumber}
           </p>
         </div>
         <p className="font-semibold text-green-500 ">

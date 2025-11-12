@@ -322,7 +322,7 @@ const PlayMatch = () => {
                   <Countdown targetDate={match.startTime} />
                 </div>
                 <strong className="w-1/3 p-2 bg-green-800 rounded text-center font-bold">
-                  #{match.serialNumber + 100}
+                  #{match.serialNumber}
                 </strong>
               </div>
             </CardContent>
@@ -463,7 +463,7 @@ const PlayMatch = () => {
                     <Countdown targetDate={match.startTime} />
                   </div>
                   <strong className="w-1/3 p-2 bg-green-800 rounded text-center font-bold">
-                    #{match.serialNumber + 100}
+                    #{match.serialNumber}
                   </strong>
                 </div>
               </CardContent>
