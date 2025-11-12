@@ -58,7 +58,7 @@ export default function LoginPage() {
       showToast("success", loginResponse.message || "Login successful");
 
       // Redirect user
-      router.push(process.env.NEXT_PUBLIC_WEB_URL);
+      return router.push("https://www.rusharena.club/");
     } catch (error) {
       console.error("Login error:", error);
       showToast(

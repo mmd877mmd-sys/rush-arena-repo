@@ -15,6 +15,7 @@
     "@capacitor/core": "^7.4.4",
     "@capacitor/network": "^7.0.2",
     "@capacitor/preferences": "^7.0.2",
+    "@capacitor/push-notifications": "^7.0.3",
     "@capacitor/share": "^7.0.2",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
