@@ -32,7 +32,7 @@ export default function Home() {
             {
               method: "POST",
               headers: {
-                Authorization: process.env.FIREBASE_Authorization,
+                Authorization: process.env.FIREBASE_AUTHORIZATION,
               },
             }
           )
