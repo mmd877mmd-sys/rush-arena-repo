@@ -4,27 +4,23 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import axios from "axios";
 
 const slides = [
   {
     id: 1,
-    image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761876748/banner2_crxpqu.jpg",
+    image: "/images/banner/banner1.jpg",
     title: "",
-    link: "",
+    link: "#",
   },
   {
     id: 2,
-    image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761876748/banner1_b0k2ww.jpg",
+    image: "/images/banner/banner2.jpg",
     title: "",
     link: "",
   },
   {
     id: 3,
-    image:
-      "https://res.cloudinary.com/dnvlk6ubg/image/upload/v1761876748/banner3_endek3.jpg",
+    image: "/images/banner/banner3.jpg",
     title: "",
     link: "",
   },

@@ -22,9 +22,7 @@ export default function Navbar() {
         }
 
         // ✅ Fetch user by authId
-        const res = await axios.get(
-          `http://localhost:3000/api/getuser/?authId=${value}`
-        );
+        const res = await axios.get(`/api/getuser/?authId=${value}`);
 
         // ✅ Handle both formats: { success: true } OR { message: "Success" }
         if (

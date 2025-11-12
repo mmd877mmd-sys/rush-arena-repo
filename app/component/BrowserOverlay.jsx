@@ -23,12 +23,12 @@ export default function BrowserOverlay({ children }) {
   const apkDownloadLink = "/apk/Rush Arena.apk";
 
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-b from-[#0A051E] to-[#1B103A] flex flex-col">
+    <div className="fixed inset-0 z-50 bg-[#0A051E] to-[#1B103A] flex flex-col">
       {/* Header */}
       <header className="flex justify-between items-center px-6 py-4 border-b border-purple-700">
         <div className="flex items-center space-x-3">
           <Image
-            src="images/logo.jpg"
+            src="/images/logo.jpg"
             alt="Rush Arena Logo"
             width={48}
             height={48}
@@ -40,7 +40,7 @@ export default function BrowserOverlay({ children }) {
         <a
           href={apkDownloadLink}
           download
-          className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-2 rounded-full font-semibold hover:opacity-90 transition"
+          className="bg-indigo-500 to-purple-600 text-white px-5 py-2 rounded-full font-semibold hover:opacity-90 transition"
         >
           Download Now
         </a>
@@ -61,7 +61,7 @@ export default function BrowserOverlay({ children }) {
           <a
             href={apkDownloadLink}
             download
-            className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-full shadow-lg transform transition hover:scale-105"
+            className="px-8 py-3 bg-indigo-500 to-purple-600 text-white font-semibold rounded-full shadow-lg transform transition hover:scale-105"
           >
             📱 Download Rush Arena
           </a>

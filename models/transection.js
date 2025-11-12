@@ -33,11 +33,6 @@ const TransactionSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    status: {
-      type: String,
-      required: true,
-      enum: ["pending", "approved", "rejected"],
-    },
   },
   { timestamps: true }
 );

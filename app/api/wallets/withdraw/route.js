@@ -3,6 +3,7 @@ import User from "@/models/user";
 import { z } from "zod";
 import { catchError, response } from "@/lib/healperFunc";
 import withdrawSchema from "@/models/withdrawSchema";
+import { sendGlobalNotification } from "@/lib/sendNotification";
 
 // Zod schema
 const zwithdrawSchema = z.object({
@@ -22,7 +23,6 @@ export async function POST(req) {
 
     // Validate input
     zwithdrawSchema.safeParse({ method, userId, receiverPhone, amount });
-    console.log(body);
 
     // Find user
     const user = await User.findById(userId);
@@ -45,6 +45,11 @@ export async function POST(req) {
     // Deduct balance
     user.winbalance -= amount;
     await user.save();
+
+    const result = await sendGlobalNotification({
+      title: "New Deposit Requested",
+      body: `${amount}tk Withdraw request for ${method}. Please Check and complete the Withdraw as soon ass pssible`,
+    });
 
     return new Response(
       JSON.stringify({
