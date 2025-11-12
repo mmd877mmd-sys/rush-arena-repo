@@ -64,8 +64,8 @@ const MarqueeText = () => {
       </div>
 
       {/* Fade Gradient Edges */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-amber-100 to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-amber-100 to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-amber-100 to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-amber-100 to-transparent" />
 
       {/* Inline Animation Style */}
       <style jsx>{`
