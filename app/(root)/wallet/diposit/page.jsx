@@ -30,7 +30,6 @@ export default function DepositPage() {
         const { data } = await axios.get(`/api/wallets/diposit/getNumber`);
         if (data.success) {
           setNumbers({ Bkash: data.data.Bkash, Nagad: data.data.Nagad });
-          setPaymentNumber(data.data.Bkash);
         }
       } catch {
         showToast("error", "Failed to fetch current numbers");
@@ -40,7 +39,7 @@ export default function DepositPage() {
 
   // Update Payment Number
   useEffect(() => {
-    setPaymentNumber(method === "Nagad" ? numbers.Bkash : numbers.Nagad);
+    setPaymentNumber(method === "Bkash" ? numbers.Bkash : numbers.Nagad);
   }, [method, numbers]);
 
   const {
