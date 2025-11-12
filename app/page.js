@@ -32,8 +32,7 @@ export default function Home() {
             {
               method: "POST",
               headers: {
-                Authorization:
-                  "key=BLHnKupngpVFThAlnTByOyLynOl-c7BtUMkI0O33Z-OpJgXD1f-7JUSWYakFDs5EnScCm821Oz2a6RuyXA6PGaI", // Replace with Firebase Server Key
+                Authorization: process.env.FIREBASE_Authorization,
               },
             }
           )
