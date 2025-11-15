@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import ButtonLoading from "@/app/component/buttonLoading";
@@ -12,13 +12,49 @@ import { Preferences } from "@capacitor/preferences";
 export default function MatchJoinPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const entryType = searchParams.get("entryType");
-  const matchId = searchParams.get("matchId");
-  const matchMap = searchParams.get("matchMap");
 
+  const matchId = searchParams.get("matchId");
+
+  const [match, setMatch] = useState({});
   const [mode, setMode] = useState("solo");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    // if (!matchId) return;
+
+    const fetchMatch = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`/api/matches/details`, {
+          params: { matchId },
+        });
+
+        const data = res.data?.data;
+        await setMatch(data);
+        console.log(match);
+      } catch (err) {
+        console.error("Error fetching match:", err);
+        showToast(false, "Something went wrong!");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMatch();
+  }, [matchId]);
+  // ✅ Format time properly
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString("en-US", {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      weekday: "short",
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
   const {
     handleSubmit,
     register,
@@ -82,19 +118,23 @@ export default function MatchJoinPage() {
     <div className="min-h-screen bg-[#0a0a1a] flex flex-col items-center px-4">
       <div className="bg-[#1c1c2e] w-full max-w-md rounded-2xl shadow-lg p-5">
         <h2 className="text-lg font-semibold text-white text-center">
-          {entryType} Time | Mobile | Regular
+          {match.entryType} Time | Mobile | Regular
         </h2>
         <p className="text-gray-400 text-center mt-1 text-sm">
-          13/07/2024, 10:30 PM
+          {formatDate(match.startTime)}
         </p>
         <div className="flex justify-between text-sm text-gray-300 mt-3">
           <span>
             Win Prize:{" "}
-            <span className="text-green-400 font-semibold">405TK</span>
+            <span className="text-green-400 font-semibold">
+              {match.winPrize}TK
+            </span>
           </span>
           <span>
             Entry Fee:{" "}
-            <span className="text-yellow-400 font-semibold">20TK</span>
+            <span className="text-yellow-400 font-semibold">
+              {match.entryFee}TK
+            </span>
           </span>
         </div>
 
@@ -123,7 +163,7 @@ export default function MatchJoinPage() {
           >
             Duo
           </button>
-          {entryType === "Squad" && (
+          {match.entryType === "Squad" && (
             <button
               className={`px-5 py-2 rounded-lg font-medium transition ${
                 mode === "squad"

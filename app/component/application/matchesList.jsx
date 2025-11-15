@@ -59,7 +59,6 @@ const PlayMatch = () => {
   const [popUpType, setPopUpType] = useState(null);
   const [matchId, setMatchId] = useState(null);
   const [isJoined, setIsJoined] = useState(false);
-  const [rotating, setRotating] = useState(false);
 
   // ✅ Format time properly
   const formatDate = (date) => {
@@ -92,12 +91,25 @@ const PlayMatch = () => {
         const data = res.data;
         const allMatches = data?.data || [];
 
-        // Filter and sort
+        // -------------------------
+        // DATE FILTER: Only today's matches
+        // -------------------------
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Today at 00:00
+
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1); // Tomorrow at 00:00
+
         const filtered = allMatches
-          .filter((m) => m.matchType === matchType)
+          .filter((m) => {
+            const matchDate = new Date(m.startTime);
+            return matchDate >= today && matchDate < tomorrow;
+          })
           .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
 
-        // Check logged user
+        // -------------------------
+        // CHECK LOGGED USER
+        // -------------------------
         const { value: authId } = await Preferences.get({
           key: "access_token",
         });
@@ -420,7 +432,7 @@ const PlayMatch = () => {
                     onClick={(e) => {
                       e.stopPropagation();
                       router.push(
-                        `/play-match/join-match?matchId=${match._id}&entryType=${match.entryType}&matchMap=${match.map}`
+                        `/play-match/join-match?matchId=${match._id}`
                       );
                     }}
                     disabled={isDisabled}

@@ -24,8 +24,8 @@ export default function MatchDetails() {
         });
 
         const data = res.data?.data;
-        setMatch(data || null);
-        setPlayers(data?.joinedPlayers || []);
+        await setMatch(data || null);
+        await setPlayers(data?.joinedPlayers || []);
       } catch (err) {
         console.error("Error fetching match:", err);
         showToast(false, "Something went wrong!");

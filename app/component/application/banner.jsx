@@ -4,26 +4,12 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { banner1, banner2, banner3 } from "@/config";
 
 const slides = [
-  {
-    id: 1,
-    image: "/images/banner/banner1.jpg",
-    title: "",
-    link: "#",
-  },
-  {
-    id: 2,
-    image: "/images/banner/banner2.jpg",
-    title: "",
-    link: "",
-  },
-  {
-    id: 3,
-    image: "/images/banner/banner3.jpg",
-    title: "",
-    link: "",
-  },
+  { id: 1, image: "/images/banner/banner1.jpg", link: banner1 },
+  { id: 2, image: "/images/banner/banner2.jpg", link: banner2 },
+  { id: 3, image: "/images/banner/banner3.jpg", link: banner3 },
 ];
 
 export default function BannerSlider() {
@@ -37,37 +23,35 @@ export default function BannerSlider() {
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
-  // Auto slide every 3 seconds
+  // Auto slide
   useEffect(() => {
     const interval = setInterval(nextSlide, 3000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="relative w-full sm:w-[90%] h-[200px] sm:h-[600px] overflow-hidden rounded-2xl">
-      {slides.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-700 ${
-            index === current ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <Link href={slide.link}>
+    <div className="relative w-full sm:w-[90%] h-[200px] sm:h-[600px] overflow-hidden rounded-2xl mx-auto">
+      {/* Slider track */}
+      <div
+        className="flex h-full transition-transform duration-700"
+        style={{ transform: `translateX(-${current * 100}%)` }}
+      >
+        {slides.map((slide) => (
+          <Link
+            key={slide.id}
+            href={slide.link}
+            className="relative min-w-full h-full block"
+          >
             <Image
               src={slide.image}
-              alt={slide.title}
+              alt={`banners Img`}
               fill
               className="object-fill"
-              priority={index === current}
+              priority={current === slide.id - 1}
             />
-            {slide.title.length > 1 && (
-              <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center text-white">
-                <h2 className="text-xl font-semibold mb-4">{slide.title}</h2>
-              </div>
-            )}
           </Link>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {/* Controls */}
       <button

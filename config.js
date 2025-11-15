@@ -18,9 +18,18 @@ export const transection = "/wallet/transection";
 
 // video link
 
-export const howtojoinmatch = "#";
-export const howtogetroomid = "#";
-export const howtoaddtaka = "#";
+export const howtojoinmatch =
+  "https://youtube.com/shorts/yYnQhVsdVPc?si=7gv0NnPPRINxjLR0";
+export const howtogetroomid =
+  "https://youtube.com/shorts/23-woKiO0Xo?si=t8HxW7d6RTl9oSze";
+export const howtoaddtaka =
+  "https://youtube.com/shorts/z9mfvFl0uuU?si=b9CVnfYuZu4L6Yf7";
+
+export const banner1 = "https://t.me/RushArena_07";
+export const banner2 =
+  "https://youtube.com/shorts/z9mfvFl0uuU?si=1MhyJbiIi9wWKLdm";
+export const banner3 =
+  "https://youtube.com/shorts/yYnQhVsdVPc?si=7gv0NnPPRINxjLR0";
 
 // support
 
