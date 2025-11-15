@@ -92,20 +92,11 @@ const PlayMatch = () => {
         const allMatches = data?.data || [];
 
         // -------------------------
-        // DATE FILTER: Only today's matches
+        // JUST SORT BY DATE (ASC)
         // -------------------------
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Today at 00:00
-
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1); // Tomorrow at 00:00
-
-        const filtered = allMatches
-          .filter((m) => {
-            const matchDate = new Date(m.startTime);
-            return matchDate >= today && matchDate < tomorrow;
-          })
-          .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+        const filtered = allMatches.sort(
+          (a, b) => new Date(a.startTime) - new Date(b.startTime)
+        );
 
         // -------------------------
         // CHECK LOGGED USER

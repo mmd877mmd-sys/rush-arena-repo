@@ -77,7 +77,8 @@ export default function MatchJoinPage() {
       return;
     }
     const authId = value;
-
+    const mode = match.entryType;
+    const matchMap = match.map;
     const payload = { matchId, mode, matchMap, authId };
 
     // Include players based on mode
