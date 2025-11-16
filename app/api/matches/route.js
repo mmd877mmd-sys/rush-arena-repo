@@ -15,16 +15,8 @@ export async function GET(request) {
       );
     }
 
-    // Get today's start and end time (00:00:00 to 23:59:59)
-    const today = new Date();
-    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
-
-    // Fetch matches that match matchType AND have startTime within today
-    const matches = await Matches.find({
-      matchType,
-      startTime: { $gte: startOfDay, $lte: endOfDay },
-    }).lean();
+    // Fetch matches ONLY by matchType (no date filtering)
+    const matches = await Matches.find({ matchType }).lean();
 
     if (!matches || matches.length === 0) {
       return new Response(
