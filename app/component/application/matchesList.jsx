@@ -91,16 +91,14 @@ const PlayMatch = () => {
         const data = res.data;
         const allMatches = data?.data || [];
 
-        // -------------------------
         // JUST SORT BY DATE (ASC)
-        // -------------------------
+
         const filtered = allMatches.sort(
           (a, b) => new Date(a.startTime) - new Date(b.startTime)
         );
 
-        // -------------------------
         // CHECK LOGGED USER
-        // -------------------------
+
         const { value: authId } = await Preferences.get({
           key: "access_token",
         });

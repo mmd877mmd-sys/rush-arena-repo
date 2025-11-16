@@ -15,9 +15,8 @@ export default function Countdown({ targetDate }) {
     return () => clearInterval(interval);
   }, [targetTime]);
 
-  //  Convert milliseconds → days/hours/minutes/seconds
-  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+  // Convert milliseconds
+  const totalHours = Math.floor(timeLeft / (1000 * 60 * 60)); // includes days
   const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
   const seconds = Math.floor((timeLeft / 1000) % 60);
 
@@ -25,8 +24,7 @@ export default function Countdown({ targetDate }) {
     <div>
       {timeLeft > 0 ? (
         <h2>
-          {" "}
-          Start In - {hours}h {minutes}m {seconds}s
+          Start In - {totalHours}h {minutes}m {seconds}s
         </h2>
       ) : (
         <h2>Will Start Very Soon</h2>
