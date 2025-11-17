@@ -137,12 +137,6 @@ const PlayMatch = () => {
     setMatchId(id);
     setPopUpType(type);
   };
-  // const handleReload = () => {
-  //   setRotating(true);
-  //   setTimeout(() => {
-  //     window.location.reload();
-  //   }, 700); // reload after short spin
-  // };
 
   // ✅ Derived matches (not joined)
   const availableMatches = useMemo(() => {
@@ -190,15 +184,6 @@ const PlayMatch = () => {
         <h1 className="text-center text-2xl text-fuchsia-50 font-bold mb-6">
           {matchType}
         </h1>
-
-        {/* <button
-          onClick={handleReload}
-          className="flex items-center justify-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
-          disabled={rotating}
-        >
-          <RotateCcw className={`w-5 h-5 ${rotating ? "animate-spin" : ""}`} />
-          <span>{rotating ? "Reloading..." : "Reload"}</span>
-        </button> */}
       </div>
       <div className="grid md:grid-cols-2 gap-3  ">
         {/* ✅ Joined Matches */}
