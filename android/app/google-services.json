@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "345707738551",
-    "project_id": "rush-arena-c155d",
-    "storage_bucket": "rush-arena-c155d.firebasestorage.app"
+    "project_number": "378607919976",
+    "project_id": "rusharena-825c1",
+    "storage_bucket": "rusharena-825c1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:345707738551:android:d6a21f6feb2af4b7f12432",
+        "mobilesdk_app_id": "1:378607919976:android:f463ce1cf8d2b170b4acdd",
         "android_client_info": {
           "package_name": "com.rusharena.app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDuSfPR6eG3sRVc8eYpXwV9xNDgU55P0-8"
+          "current_key": "AIzaSyA-EX28zqT_w8g9if4WjJ-Jsrvq2h7PcQE"
         }
       ],
       "services": {
