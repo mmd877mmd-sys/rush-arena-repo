@@ -6,5 +6,10 @@
   "server": {
     "url": "https://www.rusharena.club",
     "cleartext": false
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
   }
 }

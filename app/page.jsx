@@ -8,12 +8,17 @@ import PopupNotice from "./component/application/PopupNotice";
 
 import { useEffect } from "react";
 import { registerPushNotifications } from "@/lib/pushClient";
+import { initPush } from "@/utils/push";
 
 export default function Home() {
   useEffect(() => {
     registerPushNotifications();
   }, []);
-
+  useEffect(() => {
+    if (window.Capacitor) {
+      initPush();
+    }
+  }, []);
   return (
     <div className="w-full font-sans min-h-screen flex flex-col items-center ">
       <Navbar />
