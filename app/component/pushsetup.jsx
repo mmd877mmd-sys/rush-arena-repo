@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { initPush, onToken } from "../component/push";
-import TokenDisplay from "../component/TokenDisplay";
+import { initPush, onToken } from "./push";
+import TokenDisplay from "./TokenDisplay";
 
 export default function AppInit() {
   const [token, setToken] = useState(null);

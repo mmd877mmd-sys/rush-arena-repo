@@ -5,6 +5,7 @@ import BackButtonHandler from "./component/BackButtonHandler";
 import InternetChecker from "./component/InternetChecker";
 import ProtectedRoute from "./component/protectedRoute";
 import BrowserOverlay from "./component/BrowserOverlay";
+import AppInit from "./component/pushsetup";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <AppInit />
         <BackButtonHandler />
 
         <InternetChecker>
