@@ -31,10 +31,6 @@ export default function AppInit() {
   const saveToken = async (t) => {
     try {
       const res = await axios.post("/api/saveToken", { token: t });
-
-      if (res.data?.success) {
-        showToast("success", "Notification accessed ");
-      }
     } catch (err) {
       console.error("Error saving token:", err);
       showToast("error", "Failed to save token to server!");
