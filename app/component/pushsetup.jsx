@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { initPush, onToken } from "../component/push";
 import { showToast } from "./application/tostify";
 import axios from "axios";
+import TokenDisplay from "./TokenDisplay";
 
 export default function AppInit() {
   const [token, setToken] = useState(null);
@@ -37,5 +38,5 @@ export default function AppInit() {
     }
   };
 
-  return null; // no UI needed here
+  return <TokenDisplay token={token} />;
 }
