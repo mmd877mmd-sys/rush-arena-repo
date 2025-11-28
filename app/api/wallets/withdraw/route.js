@@ -3,7 +3,8 @@ import User from "@/models/user";
 import { z } from "zod";
 import { catchError, response } from "@/lib/healperFunc";
 import withdrawSchema from "@/models/withdrawSchema";
-import { sendGlobalNotification } from "@/lib/sendNotification";
+import Tokens from "@/models/Tokens";
+import { fcm } from "@/lib/firebaseAdmin";
 
 // Zod schema
 const zwithdrawSchema = z.object({
@@ -46,13 +47,33 @@ export async function POST(req) {
     user.winbalance -= amount;
     await user.save();
 
-    const result = await sendGlobalNotification({
-      title: "New Deposit Requested",
-      body: `${amount}tk Withdraw request for ${method}. Please Check and complete the Withdraw as soon ass pssible`,
+    // send notification s to admin
+    // 1. Get all stored device tokens
+    const records = await Tokens.find({});
+    const tokens = records.map((item) => item.token).filter(Boolean);
+
+    if (tokens.length === 0) {
+      return NextResponse.json({ error: "No tokens found" }, { status: 404 });
+    }
+
+    // 2. Prepare the notification payload
+    const payload = {
+      notification: {
+        title: "New Withdraw Requested",
+        body: `${amount}tk Withdraw request for ${method}. Please Check and complete the Withdraw `,
+      },
+    };
+
+    // 3. Send to all tokens (multicast)
+    const pushresponse = await fcm.sendEachForMulticast({
+      tokens,
+      ...payload,
     });
 
     return new Response(
       JSON.stringify({
+        sent: response.successCount,
+        failed: response.failureCount,
         success: true,
         message: "Withdrawal request submitted!",
       }),

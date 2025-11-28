@@ -40,7 +40,7 @@ const MarqueeText = () => {
     const width = el.scrollWidth / 3; // more smoothness
     setScrollWidth(width);
 
-    const speed = 100; // pixels per second
+    const speed = 60; // pixels per second
     const calculatedDuration = width / speed;
 
     setDuration(calculatedDuration || 30);

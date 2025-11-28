@@ -7,11 +7,6 @@ const TokenSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    platform: {
-      type: String,
-      enum: ["android", "ios", "web"],
-      default: "android",
-    },
   },
   { timestamps: true }
 );

@@ -25,7 +25,7 @@ export default function BannerSlider() {
 
   // Auto slide
   useEffect(() => {
-    const interval = setInterval(nextSlide, 3000);
+    const interval = setInterval(nextSlide, 6000);
     return () => clearInterval(interval);
   }, []);
 
