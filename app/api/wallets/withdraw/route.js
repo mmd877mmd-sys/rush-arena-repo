@@ -3,7 +3,7 @@ import User from "@/models/user";
 import { z } from "zod";
 import { catchError, response } from "@/lib/healperFunc";
 import withdrawSchema from "@/models/withdrawSchema";
-import adminTokens from "@/models/Tokens";
+import adminTokens from "@/models/adminTokens";
 import { fcm } from "@/lib/firebaseAdmin";
 
 // Zod schema

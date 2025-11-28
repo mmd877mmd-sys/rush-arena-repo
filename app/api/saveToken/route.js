@@ -1,5 +1,5 @@
 import { connectDB } from "@/lib/connectDB";
-import Tokens from "@/models/Tokens";
+import Token from "@/models/tokens";
 
 export async function POST(request) {
   try {
@@ -19,11 +19,19 @@ export async function POST(request) {
     await connectDB();
 
     // Save token or update timestamp if it already exists
-    await Tokens.updateOne(
+    await Token.updateOne(
       { token },
       { token, createdAt: new Date() },
       { upsert: true }
     );
+    // Set cookie
+    const headers = {
+      "Set-Cookie": cookie.serialize("notification_token", token, {
+        httpOnly: false, // frontend/Capacitor can read it
+        path: "/",
+        sameSite: "lax",
+      }),
+    };
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
