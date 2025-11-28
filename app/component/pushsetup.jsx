@@ -38,5 +38,5 @@ export default function AppInit() {
     }
   };
 
-  return <TokenDisplay token={token} />;
+  return null; // <TokenDisplay token={token} />;
 }
