@@ -3,7 +3,7 @@ import User from "@/models/user";
 import { z } from "zod";
 import { catchError, response } from "@/lib/healperFunc";
 import withdrawSchema from "@/models/withdrawSchema";
-import Tokens from "@/models/Tokens";
+import adminTokens from "@/models/Tokens";
 import { fcm } from "@/lib/firebaseAdmin";
 
 // Zod schema
@@ -49,7 +49,7 @@ export async function POST(req) {
 
     // send notification s to admin
     // 1. Get all stored device tokens
-    const records = await Tokens.find({});
+    const records = await adminTokens.find({});
     const tokens = records.map((item) => item.token).filter(Boolean);
 
     if (tokens.length === 0) {

@@ -11,4 +11,5 @@ const TokenSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.Tokens || mongoose.model("Tokens", TokenSchema);
+export default mongoose.models.adminTokens ||
+  mongoose.model("adminTokens", TokenSchema);
