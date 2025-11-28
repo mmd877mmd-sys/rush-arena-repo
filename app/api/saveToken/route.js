@@ -24,14 +24,14 @@ export async function POST(request) {
       { token, createdAt: new Date() },
       { upsert: true }
     );
-    // Set cookie
-    const headers = {
-      "Set-Cookie": cookie.serialize("notification_token", token, {
-        httpOnly: false, // frontend/Capacitor can read it
-        path: "/",
-        sameSite: "lax",
-      }),
-    };
+    // // Set cookie
+    // const headers = {
+    //   "Set-Cookie": cookie.serialize("notification_token", token, {
+    //     httpOnly: false, // frontend/Capacitor can read it
+    //     path: "/",
+    //     sameSite: "lax",
+    //   }),
+    // };
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
