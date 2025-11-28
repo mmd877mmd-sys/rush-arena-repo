@@ -13,4 +13,4 @@ const TokenSchema = new mongoose.Schema({
 });
 
 // This prevents model overwrite errors in Next.js hot reload
-export default mongoose.models.Token || mongoose.model("Token", TokenSchema);
+export default mongoose.models.Tokens || mongoose.model("Tokens", TokenSchema);

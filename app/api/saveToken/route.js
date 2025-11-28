@@ -1,5 +1,5 @@
 import { connectDB } from "@/lib/connectDB";
-import Token from "@/models/tokens";
+import Tokens from "@/models/token";
 
 export async function POST(request) {
   try {
@@ -19,7 +19,7 @@ export async function POST(request) {
     await connectDB();
 
     // Save token or update timestamp if it already exists
-    await Token.updateOne(
+    await Tokens.updateOne(
       { token },
       { token, createdAt: new Date() },
       { upsert: true }
