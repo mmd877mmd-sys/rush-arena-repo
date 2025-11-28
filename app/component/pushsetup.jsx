@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { initPush, onToken } from "../component/push";
-import { showToast } from "./application/tostify";
+// import { showToast } from "./application/tostify";
 import axios from "axios";
 import { Preferences } from "@capacitor/preferences";
 // import TokenDisplay from "./TokenDisplay";
@@ -17,7 +17,7 @@ export default function AppInit() {
     // Subscribe to token updates
     const unsubscribe = onToken((t) => {
       if (!t) {
-        showToast("error", "Failed to get notification token!");
+        console.log("Failed to get notification token!");
         return;
       }
       setToken(t);
@@ -40,7 +40,7 @@ export default function AppInit() {
       });
     } catch (err) {
       console.error("Error saving token:", err);
-      showToast("error", "Failed to save token to server!");
+      // showToast("error", "Failed to save token to server!");
     }
   };
 
