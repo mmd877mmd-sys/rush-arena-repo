@@ -63,7 +63,9 @@ export default function ProfileSidebar() {
 
     if (newCount >= 5) {
       setClickCount(0); // reset counter
-      const tokenFromCookie = await Preferences.get({ key: "fcm_token" });
+      const tokenFromCookie = (await Preferences.get({ key: "fcm_token" }))
+        .value;
+      console.log(tokenFromCookie);
 
       setPushTonen(tokenFromCookie || "No token found");
       setShowModal(true);
