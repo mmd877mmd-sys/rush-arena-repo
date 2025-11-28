@@ -1,6 +1,5 @@
 import { connectDB } from "@/lib/connectDB";
 import Tokens from "@/models/token";
-import { Preferences } from "@capacitor/preferences";
 
 export async function POST(request) {
   try {
@@ -25,11 +24,6 @@ export async function POST(request) {
       { token, createdAt: new Date() },
       { upsert: true }
     );
-    // // Set cookie
-    await Preferences.set({
-      key: "fcm_token",
-      value: token,
-    });
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
