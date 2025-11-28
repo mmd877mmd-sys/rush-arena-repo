@@ -25,13 +25,10 @@ export async function POST(request) {
       { upsert: true }
     );
     // // Set cookie
-    // const headers = {
-    //   "Set-Cookie": cookie.serialize("notification_token", token, {
-    //     httpOnly: false, // frontend/Capacitor can read it
-    //     path: "/",
-    //     sameSite: "lax",
-    //   }),
-    // };
+    await Preferences.set({
+      key: "fcm_token",
+      value: token,
+    });
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,

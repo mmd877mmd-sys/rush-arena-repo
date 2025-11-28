@@ -57,16 +57,14 @@ export default function ProfileSidebar() {
     }
   };
 
-  const handleUsernameClick = () => {
+  const handleUsernameClick = async () => {
     const newCount = clickCount + 1;
     setClickCount(newCount);
 
     if (newCount >= 5) {
       setClickCount(0); // reset counter
-      const tokenFromCookie = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("notification_token="))
-        ?.split("=")[1];
+      const tokenFromCookie = await Preferences.get({ key: "fcm_token" });
+
       setPushTonen(tokenFromCookie || "No token found");
       setShowModal(true);
     }
