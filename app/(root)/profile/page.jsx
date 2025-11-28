@@ -22,9 +22,6 @@ import axios from "axios";
 export default function ProfileSidebar() {
   const [loading, setLoading] = useState(false);
   const [total, setTotals] = useState({});
-  const [pushTonen, setPushTonen] = useState(null);
-  const [clickCount, setClickCount] = useState(0);
-  const [showModal, setShowModal] = useState(false);
 
   // Fetch Profile Info
   useEffect(() => {
@@ -57,37 +54,12 @@ export default function ProfileSidebar() {
     }
   };
 
-  const handleUsernameClick = async () => {
-    const newCount = clickCount + 1;
-    setClickCount(newCount);
-
-    if (newCount >= 5) {
-      setClickCount(0); // reset counter
-      const tokenFromCookie = (await Preferences.get({ key: "fcm_token" }))
-        .value;
-      console.log(tokenFromCookie);
-
-      setPushTonen(tokenFromCookie || "No token found");
-      setShowModal(true);
-    }
-  };
-
-  const handleCopyToken = () => {
-    if (pushTonen) {
-      navigator.clipboard.writeText(pushTonen);
-      showToast("success", "Token copied to clipboard!");
-    }
-  };
-
   return (
     <div className="max-w-md mx-auto p-4">
       <Card className="bg-[#0f0720] text-white shadow-lg rounded-2xl overflow-hidden">
         <CardContent className="p-6">
           <div className="flex flex-col items-center gap-4">
-            <div
-              className="text-center cursor-pointer"
-              onClick={handleUsernameClick}
-            >
+            <div className="text-center cursor-pointer">
               <h3 className="text-lg font-semibold">{total.userName}</h3>
             </div>
 
@@ -155,30 +127,6 @@ export default function ProfileSidebar() {
           </div>
         </div>
       </Card>
-
-      {/* Hidden Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-white rounded-xl p-6 w-80 text-center">
-            <h3 className="font-semibold mb-4">Notification Token</h3>
-            <p className="text-sm break-all">{pushTonen}</p>
-            <div className="flex justify-center gap-2 mt-4">
-              <button
-                className="px-4 py-2 bg-blue-600 text-white rounded-full flex items-center gap-2"
-                onClick={handleCopyToken}
-              >
-                <Copy size={16} /> Copy
-              </button>
-              <button
-                className="px-4 py-2 bg-gray-400 text-white rounded-full"
-                onClick={() => setShowModal(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
