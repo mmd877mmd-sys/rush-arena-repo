@@ -155,7 +155,7 @@ export default function MatchJoinPage() {
             Solo
           </button>
           {console.log(match)}
-          {match.matchType !== "Free match" && (
+          {match.entryType !== "Solo" && (
             <button
               className={`px-5 py-2 rounded-lg font-medium transition ${
                 mode === "duo"
