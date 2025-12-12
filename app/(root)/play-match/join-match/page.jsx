@@ -154,16 +154,19 @@ export default function MatchJoinPage() {
           >
             Solo
           </button>
-          <button
-            className={`px-5 py-2 rounded-lg font-medium transition ${
-              mode === "duo"
-                ? "bg-yellow-500 text-black"
-                : "bg-gray-700 text-gray-200"
-            }`}
-            onClick={() => setMode("duo")}
-          >
-            Duo
-          </button>
+          {console.log(match)}
+          {match.matchType !== "Free match" && (
+            <button
+              className={`px-5 py-2 rounded-lg font-medium transition ${
+                mode === "duo"
+                  ? "bg-yellow-500 text-black"
+                  : "bg-gray-700 text-gray-200"
+              }`}
+              onClick={() => setMode("duo")}
+            >
+              Duo
+            </button>
+          )}
           {match.entryType === "Squad" && (
             <button
               className={`px-5 py-2 rounded-lg font-medium transition ${
