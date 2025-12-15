@@ -111,7 +111,7 @@ export default function WithdrawPage() {
             <p className="text-gray-400 mb-1">Amount</p>
             <input
               type="number"
-              placeholder="105-25,000"
+              placeholder="60-25,000"
               {...register("amount")}
               className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
             />
