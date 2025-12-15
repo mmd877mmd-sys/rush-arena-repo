@@ -9,6 +9,7 @@ import PopupNotice from "./component/application/PopupNotice";
 import { useEffect } from "react";
 import { registerPushNotifications } from "@/lib/pushClient";
 import { initPush } from "@/utils/push";
+import SupportImg from "./component/application/support";
 
 export default function Home() {
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function Home() {
         <BannerSlider />
         <MatchCards />
       </main>
+      <SupportImg />
       <FooterNav />
     </div>
   );

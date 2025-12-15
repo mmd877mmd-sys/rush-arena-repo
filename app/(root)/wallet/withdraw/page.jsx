@@ -19,7 +19,7 @@ const withdrawSchema = z.object({
         .transform(Number),
       z.number(),
     ])
-    .refine((n) => n >= 105, { message: "Minimum withdrawal amount is 105!" }),
+    .refine((n) => n >= 60, { message: "Minimum withdrawal amount is 60!" }),
 });
 
 export default function WithdrawPage() {
