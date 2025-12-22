@@ -31,6 +31,10 @@ export async function POST(req) {
     if (!user) {
       return response(false, 404, "User not found");
     }
+    const totalSpots = match.totalSpots;
+    if (match.joinedPlayers.length + players.length > totalSpots) {
+      return response(false, 400, "Not enough spots available in the match");
+    }
 
     // ✅ Calculate total entry fee = entryFee × number of players
     const totalEntryFee = match.entryFee * players.length;
