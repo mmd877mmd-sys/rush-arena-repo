@@ -16,7 +16,7 @@ export default function AppInit() {
     // Subscribe to token updates
     const unsubscribe = onToken((t) => {
       if (!t) {
-        console.log("Failed to get notification token!");
+        // console.log("Failed to get notification token!");
         return;
       }
       setToken(t);
@@ -31,9 +31,17 @@ export default function AppInit() {
 
   const saveToken = async (t) => {
     try {
-      const res = await axios.post("/api/saveToken", { token: t });
+      const { value } = await Preferences.get({ key: "access_token" });
+      if (!value) {
+        // console.log("No access token found, user might not be logged in.");
+        return;
+      }
+      const res = await axios.post("/api/saveToken", {
+        token: t,
+        userId: value,
+      });
     } catch (err) {
-      console.error("Error saving token:", err);
+      // console.error("Error saving token:", err);
       // showToast("error", "Failed to save token to server!");
     }
   };

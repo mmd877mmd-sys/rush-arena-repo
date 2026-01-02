@@ -4,7 +4,7 @@ import Tokens from "@/models/token";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { token } = body;
+    const { token, userId } = body;
 
     if (!token) {
       return new Response(
@@ -20,8 +20,8 @@ export async function POST(request) {
 
     // Save token or update timestamp if it already exists
     await Tokens.updateOne(
-      { token },
-      { token, createdAt: new Date() },
+      { token, userId },
+      { token, userId, createdAt: new Date() },
       { upsert: true }
     );
 
