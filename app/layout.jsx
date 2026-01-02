@@ -1,11 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ToastContainer } from "react-toastify";
-import BackButtonHandler from "./component/BackButtonHandler";
-import InternetChecker from "./component/InternetChecker";
-import ProtectedRoute from "./component/protectedRoute";
-import BrowserOverlay from "./component/BrowserOverlay";
-import AppInit from "./component/pushsetup";
+
+import ClientProviders from "./component/ClientProviders";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,16 +27,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppInit />
-        <BackButtonHandler />
-
-        <InternetChecker>
-          <BrowserOverlay>
-            <ProtectedRoute>{children}</ProtectedRoute>
-          </BrowserOverlay>
-        </InternetChecker>
-
-        <ToastContainer />
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

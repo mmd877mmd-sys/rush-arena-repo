@@ -20,7 +20,6 @@ import Logo from "@/public/images/logo.jpg";
 import { showToast } from "@/app/component/application/tostify";
 
 import ButtonLoading from "@/app/component/buttonLoading";
-import AppInit from "@/app/component/pushsetup";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +60,7 @@ export default function SignupPage() {
       // Reset form and show success
       reset();
       showToast("success", signupResponse.message || "Signup successful");
-      AppInit();
+
       // Redirect user
 
       // Redirect user

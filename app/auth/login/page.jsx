@@ -19,7 +19,6 @@ import { useRouter } from "next/navigation";
 import { Preferences } from "@capacitor/preferences";
 import ButtonLoading from "@/app/component/buttonLoading";
 import { showToast } from "@/app/component/application/tostify";
-import AppInit from "@/app/component/pushsetup";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +52,6 @@ export default function LoginPage() {
       // Save token in Capacitor Preferences (works in APK + web)
       if (token) {
         await Preferences.set({ key: "access_token", value: token });
-        AppInit();
       }
 
       reset();

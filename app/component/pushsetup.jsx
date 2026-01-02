@@ -1,50 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { initPush, onToken } from "../component/push";
-// import { showToast } from "./application/tostify";
 import axios from "axios";
-// import TokenDisplay from "./TokenDisplay";
+import { Capacitor } from "@capacitor/core";
+import { Preferences } from "@capacitor/preferences";
 
 export default function AppInit() {
-  const [token, setToken] = useState(null);
+  const lastTokenRef = useRef(null);
 
   useEffect(() => {
-    // Initialize push notifications
+    // Only run on native platforms (Android / iOS)
+    if (!Capacitor.isNativePlatform()) return;
+
     initPush();
 
-    // Subscribe to token updates
-    const unsubscribe = onToken((t) => {
-      if (!t) {
-        // console.log("Failed to get notification token!");
-        return;
-      }
-      setToken(t);
-      saveToken(t);
+    const unsubscribe = onToken(async (token) => {
+      if (!token) return;
+
+      // Prevent duplicate saves
+      if (lastTokenRef.current === token) return;
+      lastTokenRef.current = token;
+
+      await saveToken(token);
     });
 
-    // Cleanup subscription on unmount
     return () => {
-      if (unsubscribe) unsubscribe();
+      if (typeof unsubscribe === "function") unsubscribe();
     };
   }, []);
 
-  const saveToken = async (t) => {
+  const saveToken = async (token) => {
     try {
-      const { value } = await Preferences.get({ key: "access_token" });
-      if (!value) {
-        // console.log("No access token found, user might not be logged in.");
-        return;
-      }
-      const res = await axios.post("/api/saveToken", {
-        token: t,
-        userId: value,
+      const { value: userId } = await Preferences.get({ key: "access_token" });
+      if (!userId) return;
+
+      await axios.post("/api/saveToken", {
+        token,
+        userId,
+        platform: Capacitor.getPlatform(),
       });
+
+      console.log("✅ Push token saved:", token);
     } catch (err) {
-      // console.error("Error saving token:", err);
-      // showToast("error", "Failed to save token to server!");
+      console.error("❌ Failed to save push token", err);
     }
   };
 
-  return null; // <TokenDisplay token={token} />;
+  return null;
 }
