@@ -6,29 +6,54 @@ export async function POST(request) {
     const body = await request.json();
     const { token, userId } = body;
 
-    if (!token) {
+    if (!token || !userId) {
       return new Response(
-        JSON.stringify({ success: false, message: "Token is required" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
+        JSON.stringify({
+          success: false,
+          message: "Token and userId are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
     await connectDB();
 
-    // Save token or update timestamp if it already exists
+    const cutoffDate = new Date("2026-01-01T00:00:00.000Z");
+
+    // Check if token already exists BEFORE 01-01-2026
+    const oldToken = await Tokens.findOne({
+      token,
+      userId,
+      createdAt: { $lt: cutoffDate },
+    });
+
+    // If old duplicate exists → ignore
+    if (oldToken) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: "Duplicate token ignored (created before 01-01-2026)",
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Otherwise insert or update
     await Tokens.updateOne(
       { token, userId },
-      { token, userId, createdAt: new Date() },
+      {
+        $set: {
+          token,
+          userId,
+          createdAt: new Date(),
+        },
+      },
       { upsert: true }
     );
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, token }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
-      data: token,
     });
   } catch (err) {
     console.error("Error saving token:", err);
