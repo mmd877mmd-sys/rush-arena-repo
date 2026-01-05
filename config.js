@@ -21,9 +21,9 @@ export const transection = "/wallet/transection";
 export const howtojoinmatch =
   "https://youtube.com/shorts/yYnQhVsdVPc?si=7gv0NnPPRINxjLR0";
 export const howtogetroomid =
-  "https://youtube.com/shorts/23-woKiO0Xo?si=t8HxW7d6RTl9oSze";
+  "https://youtube.com/shorts/BzG_JhqUTvc?si=Z_ycuxYfauUOIe3W";
 export const howtoaddtaka =
-  "https://youtube.com/shorts/z9mfvFl0uuU?si=b9CVnfYuZu4L6Yf7";
+  "https://youtube.com/shorts/wJXry4PRODY?si=z_eb-zHHGZRW90Y-";
 
 export const banner1 = "https://t.me/RushArena_07";
 export const banner2 =
