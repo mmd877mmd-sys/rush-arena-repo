@@ -19,17 +19,17 @@ export const transection = "/wallet/transection";
 // video link
 
 export const howtojoinmatch =
-  "https://youtube.com/shorts/yYnQhVsdVPc?si=7gv0NnPPRINxjLR0";
-export const howtogetroomid =
   "https://youtube.com/shorts/BzG_JhqUTvc?si=Z_ycuxYfauUOIe3W";
+export const howtogetroomid =
+  "https://www.youtube.com/shorts/BzG_JhqUTvc?t=15&feature=share";
 export const howtoaddtaka =
   "https://youtube.com/shorts/wJXry4PRODY?si=z_eb-zHHGZRW90Y-";
 
 export const banner1 = "https://t.me/RushArena_07";
 export const banner2 =
-  "https://youtube.com/shorts/z9mfvFl0uuU?si=1MhyJbiIi9wWKLdm";
+  "https://youtube.com/shorts/wJXry4PRODY?si=z_eb-zHHGZRW90Y-";
 export const banner3 =
-  "https://youtube.com/shorts/yYnQhVsdVPc?si=7gv0NnPPRINxjLR0";
+  "https://youtube.com/shorts/BzG_JhqUTvc?si=Z_ycuxYfauUOIe3W";
 
 // support
 
