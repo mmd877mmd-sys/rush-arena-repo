@@ -18,9 +18,9 @@ export async function POST(request) {
 
     await connectDB();
 
-    const cutoffDate = new Date("2026-01-01T00:00:00.000Z");
+    const cutoffDate = new Date("2026-04-01T00:00:00.000Z");
 
-    // Check if token already exists BEFORE 01-01-2026
+    // Check if token already exists BEFORE 01-04-2026
     const oldToken = await Tokens.findOne({
       token,
       userId,
