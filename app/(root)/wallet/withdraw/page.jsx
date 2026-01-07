@@ -61,6 +61,27 @@ export default function WithdrawPage() {
       if (res.data.success) {
         reset();
         showToast("success", "Withdrawal request sent successfully!");
+
+        const finalMessage =
+          "New withdrawal request:\n" +
+          `Method: ${method}\n` +
+          `Receiver Phone: ${data.receiverPhone}\n` +
+          `Amount: ${data.amount}`;
+
+        if (!finalMessage) return;
+
+        try {
+          const res = await axios.post(`/api/send-notification`, {
+            message: finalMessage,
+          });
+
+          if (res.data.success) {
+            setCustomText("");
+            showToast("success", "Notification request sent!");
+          }
+        } catch (error) {
+          console.log("Notification error:", error);
+        }
       } else {
         showToast("error", res.data.message || "Something went wrong!");
       }
