@@ -49,7 +49,7 @@ export default function ProfilePage() {
         });
 
         if (!res) {
-          showToast("error", res.message || "Failed to fetch user.");
+          showToast("error", res?.data?.message || "Failed to fetch user.");
           return;
         }
 
@@ -70,16 +70,22 @@ export default function ProfilePage() {
     try {
       setLoading(true);
       data.authId = loggedAuth._id;
-      const res = await axios.post(`/api/auth/changePassword`, data);
-      con;
+      const response = await axios.post(`/api/auth/changePassword`, data);
 
       if (!response.success) {
-        showToast("error", response.message || "Update failed");
+        showToast(
+          "error",
+          response?.data?.message || "Failed to change password"
+        );
+
         return;
       }
 
       reset();
-      showToast("success", response.message || "Password changed successfully");
+      showToast(
+        "success",
+        response?.data?.message || "Password changed successfully"
+      );
     } catch (error) {
       console.error("Update error:", error);
       showToast(
