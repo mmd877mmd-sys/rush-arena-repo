@@ -20,7 +20,7 @@ const TransactionSchema = new mongoose.Schema(
     },
     id: {
       type: String,
-      required: true,
+    
       trim: true,
       default: "",
     },
