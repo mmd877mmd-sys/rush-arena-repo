@@ -156,9 +156,15 @@ export default function TransactionHistoryPage() {
                     <span className="mt-1 text-xs font-medium px-2 py-1 rounded-full bg-white text-black">
                       {txn.status}
                     </span>
-                    <span className="text-gray-200 text-sm mt-1">
-                      {new Date(txn.createdAt).toLocaleString()}
-                    </span>
+              <span className="text-gray-200 text-sm mt-1">
+  {new Date(txn.createdAt).toLocaleString([], {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })}
+</span>
                   </div>
                 </div>
               ))}
