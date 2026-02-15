@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/connectDB";
 import User from "@/models/user";
 import SmsLog from "@/models/smsLog";
@@ -15,6 +16,8 @@ const depositSchema = z.object({
 });
 
 export async function POST(req) {
+  const session = await mongoose.startSession();
+
   try {
     await connectDB();
 
@@ -28,68 +31,114 @@ export async function POST(req) {
       trxId,
       phone,
     });
+
     if (!validation.success) {
       return response(false, 400, validation.error.errors[0].message);
+    }
+
+    // ✅ Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return response(false, 400, "Invalid userId");
     }
 
     // ✅ Find user
     const user = await User.findById(userId);
     if (!user) return response(false, 404, "User not found");
 
-    // ✅ Check if transaction already used
-    const trxUsed =
-      (await Transactions.findOne({ trxId })) ||
-      (await Deposit.findOne({ trxId }));
-    if (trxUsed)
-      return response(false, 400, "This transaction ID is already used");
+    // ✅ Check duplicate trxId in parallel
+    const [trxUsed, depositUsed] = await Promise.all([
+      Transactions.findOne({ trxId }),
+      Deposit.findOne({ trxId }),
+    ]);
 
-    // ✅ Check if transaction exists in SMS logs
+    if (trxUsed || depositUsed) {
+      return response(false, 400, "This transaction ID is already used");
+    }
+
+    // ✅ Check SMS Log
     const smsLog = await SmsLog.findOne({ transactionId: trxId });
 
-    // ⚙️ CASE 1: trxId found in SmsLog → create direct transaction
+    // =========================================
+    // CASE 1: SMS Found → Instant Deposit
+    // =========================================
     if (smsLog) {
-      const numericAmount = Number(smsLog.amount) || 0;
+      const numericAmount = Number(smsLog.amount);
 
-      // --- Create a transaction record ---
-      await Transactions.create({
-        userId,
-        type: "deposit",
-        method: smsLog.service || method,
-        phone: smsLog.senderNumber || phone,
-        id: trxId,
-        amount: numericAmount,
-        createdAt: new Date(),
-      });
+      // ✅ Validate amount
+      if (!numericAmount || numericAmount <= 0) {
+        return response(false, 400, "Invalid deposit amount");
+      }
 
-      // --- Update user balance ---
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { $inc: { dipositbalance: numericAmount } },
-        { new: true }
+      // ✅ Verify SMS data matches request
+      if (
+        smsLog.senderNumber !== phone ||
+        smsLog.service !== method
+      ) {
+        return response(false, 400, "Transaction details mismatch");
+      }
+
+      // 🔐 Start atomic transaction
+      await session.startTransaction();
+
+      // 1️⃣ Create transaction record
+      await Transactions.create(
+        [
+          {
+            userId,
+            type: "deposit",
+            method,
+            phone,
+            trxId,
+            amount: numericAmount,
+            createdAt: new Date(),
+          },
+        ],
+        { session }
       );
 
-      if (!updatedUser)
-        return response(false, 404, "User not found while updating balance");
+      // 2️⃣ Update user balance
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { $inc: { dipositbalance: numericAmount } }, // ensure field name correct
+        { new: true, session }
+      );
 
-      // ✅ Delete the used SmsLog record
-      await SmsLog.deleteOne({ transactionId: trxId });
+      if (!updatedUser) {
+        throw new Error("User not found while updating balance");
+      }
+
+      // 3️⃣ Delete used SMS log
+      await SmsLog.deleteOne({ transactionId: trxId }, { session });
+
+      // ✅ Commit
+      await session.commitTransaction();
+      session.endSession();
 
       return response(true, 200, "Deposit successful and balance updated");
     }
 
-    // ⚙️ CASE 2: trxId not found in SmsLog → create a pending deposit record
-    const newDeposit = await Deposit.create({
+    // =========================================
+    // CASE 2: SMS Not Found → Pending Deposit
+    // =========================================
+    await Deposit.create({
       userId,
       method,
       phone,
       trxId,
+      status: "pending", // recommended field
+      createdAt: new Date(),
     });
-
-    if (!newDeposit)
-      return response(false, 500, "Failed to create deposit record");
 
     return response(true, 200, "Deposit request submitted successfully!");
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
+    // ✅ Handle duplicate key error (unique index protection)
+    if (err.code === 11000) {
+      return response(false, 400, "Transaction ID already exists");
+    }
+
     console.error("Deposit route error:", err);
     return catchError(err);
   }
